@@ -1,0 +1,56 @@
+.soft-line-wrapper {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+
+}
+
+.soft-line {
+    border-bottom: 1px solid rgb(235, 235, 235) !important;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.fixed-column-height {
+    height: 36vh;
+}
+
+.fixed-title-height {
+    height: 8vh;
+}
+
+.inherit-div {
+    display: inherit;
+}
+
+.tenant-landlord {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.tenant-landlord .field {
+    width: 45%;
+    border: 0.2vh solid #dbdbdb;
+    border-radius: 0.5vh;
+}
+
+.background-checked {
+    background: #00C4A7;
+    color: white;
+}
+
+.label-radio {
+    width: 100% !important;
+    display: block !important;
+    height: 100% !important;
+}
+
+.field-body {
+    margin-bottom: .75em;
+}
+
+.field-body .field {
+    width: 50% !important;
+}
