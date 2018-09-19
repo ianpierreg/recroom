@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', #token system for users
     'frontend', #react gets its own django app here :)
     'users', #app for managing users, including login
-    'room' #app for managing roooms
+    'room.apps.RoomConfig', #app for managing roooms
+    'interest.apps.InterestConfig', #app for managing user's interests
 ]
 
 MIDDLEWARE = [

@@ -11,4 +11,3 @@ class Profile(models.Model):
     group = models.CharField('Grupo', max_length=11, null=False, blank=False)
     # house = models.OneToOneField(House, null=True, blank=True, on_delete=models.DO_NOTHING)
 
-
