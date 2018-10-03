@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from room import views
+from house import views
 
 urlpatterns = [
+    path('api/add-house/', views.create_house, name='create_house'),
     path('api/rooms/', views.RoomListView.as_view()),
 ]
 

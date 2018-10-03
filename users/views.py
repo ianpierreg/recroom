@@ -1,21 +1,47 @@
 # users/views.py
+import random
+
 from django.contrib.auth.models import Group
 from rest_framework.authtoken.models import Token
 
-from django.contrib.auth import authenticate, login
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
 
-from rest_framework import generics, status
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
-from users.serializers import CreateProfileSerializer, CreateUserSerializer
-from . import models
-from . import serializers
+from interest.models import Interest, InterestType
+from interest.serializers import InterestSerializer
+from users.models import Profile
+from users.serializers import CreateUserSerializer
 
+
+@csrf_exempt
+@api_view(['POST'])
+def get_save_interests(request):
+    token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
+    token = Token.objects.get(key=token_header)
+    profile = Profile.objects.get(user_id=token.user_id)
+
+    if(request.data):
+        interests = Interest.objects.filter(id__in=request.data)
+        profile.answered += 1
+        profile.save()
+        for interest in interests:
+            profile.interests.add(interest)
+
+    interests_buff = profile.interests.all().values_list("interest_type_id", flat=True)
+    types_available = InterestType.objects.exclude(id__in = interests_buff)
+
+    if types_available:
+        interest_type = random.choice(types_available)
+        interests = Interest.objects.filter(interest_type=interest_type)
+        serializers = InterestSerializer(interests, many=True)
+        return Response({"type": interest_type.name, "interests": serializers.data}, status=status.HTTP_200_OK)
+    else:
+        return Response({"status": "Ok", "msg": "As perguntas terminaram!"}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 @api_view(['POST'])
@@ -30,7 +56,6 @@ def create_user(request):
         return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
     else:
         return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(["POST"])
 def login(request):

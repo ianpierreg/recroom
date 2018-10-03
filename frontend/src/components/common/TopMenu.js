@@ -2,6 +2,7 @@ import React from "react"
 import { render } from "react-dom"
 import FormRegister from "../user/FormRegister";
 import FormLogin from "../user/FormLogin";
+import InterestsContainer from "../user/InterestsContainer";
 
 export default class TopMenu extends React.Component {
   constructor(props) {
@@ -20,7 +21,9 @@ export default class TopMenu extends React.Component {
          return <FormRegister endpoint="/cadastrar/" />
      } else if (this.state.modal == "login") {
         return <FormLogin endpoint="/login/" />
-     }
+     } else if (this.state.modal == "questions") {
+       return <InterestsContainer endpoint="/interesses/" />
+    }
   }
 
   setModal(type) {
@@ -50,7 +53,7 @@ export default class TopMenu extends React.Component {
   renderLoginOrLogoutBtn() {
       if(!this.state.logged) {
           return (
-              <div class="inherit-div">
+              <div className="inherit-div">
                 <p className="level-item" onClick={this.setModal.bind(this, 'cadastrar')}><a>Cadastrar</a></p>
                 <p className="level-item" onClick={this.setModal.bind(this, 'login')}><a className="button is-success">Entrar</a></p>
               </div>
@@ -90,7 +93,7 @@ export default class TopMenu extends React.Component {
                 <div className="level-right">
                     <p className="level-item"><strong>Moradias</strong></p>
                     <p className="level-item"><a>Sobre nós</a></p>
-                    <p className="level-item"><a>Tenho um quarto</a></p>
+                    <p id="questions" className="level-item" onClick={this.setModal.bind(this, 'questions')}><a>Responder perguntas</a></p>
                     {this.renderLoginOrLogoutBtn()}
                 </div>
             </nav>

@@ -16,6 +16,11 @@ class CreateProfileSerializer(serializers.ModelSerializer):
 class CreateUserSerializer(serializers.ModelSerializer):
     profile = CreateProfileSerializer()
 
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'password', 'profile')
+        extra_kwargs = {'password': {'write_only': True}}
+
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
         user = User(
@@ -30,14 +35,3 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
         Profile.objects.create(user=user, **profile_data)
         return user
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email', 'password', 'profile')
-        extra_kwargs = {'password': {'write_only': True}}
-
-
-class UpdateProfileForm(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('birthdate', 'cellphone')

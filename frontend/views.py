@@ -13,3 +13,6 @@ def register(request):
 
 def login(request):
     return render(request, 'frontend/login.html')
+
+def add_room(request):
+    return render(request, 'frontend/add_room.html')

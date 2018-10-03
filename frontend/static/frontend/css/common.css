@@ -30,8 +30,11 @@
     justify-content: space-between;
 }
 
+.columns .interests-columns {
+    margin-left: 0;
+}
+
 .tenant-landlord .field {
-    width: 45%;
     border: 0.2vh solid #dbdbdb;
     border-radius: 0.5vh;
 }
@@ -53,4 +56,50 @@
 
 .field-body .field {
     width: 50% !important;
+}
+
+.no-new-questions {
+    text-align: center;
+    margin-bottom: 2vh;
+    font-size: 3.2vh;
+}
+
+.remove-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/*Menu superior*/
+.hero.fixed {
+    position: fixed;
+    width: 100%;
+    margin-top: 1vh;
+    z-index: 10;
+    background-color: #2e363f;
+}
+
+.aside.fixed {
+    position: fixed;
+    margin-top: 6vh;
+    height: 100%;
+}
+
+.main.top {
+    margin-top: 6vh;
+}
+
+.plus-minus {
+    font-size: 1vh;
+    height: 2vh;
+    width: 2vh;
+    border-radius: 1vh;
+    color: white;
+}
+
+.plus {
+    background-color: #00b89c;
+}
+
+.minus {
+    background-color: red;
 }

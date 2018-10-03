@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import '../../../static/frontend/css/common.css';
 import CSRFToken from '../common/csrftoken';
 import NumberFormat from 'react-number-format'
+import Interests from "../Interests";
 
 class FormRegister extends Component {
   static propTypes = {
@@ -286,7 +287,7 @@ class FormRegister extends Component {
         return response.json();
     }).then(data => {
         localStorage.setItem("token", "Token "+data.token)
-        location.reload();
+        document.getElementById('questions').click();
     })
   };
 

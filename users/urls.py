@@ -20,6 +20,7 @@ from users import views
 
 urlpatterns = [
     path('cadastrar/', views.create_user, name='create_user'),
+    path('interesses/', views.get_save_interests, name='interests'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
 ]

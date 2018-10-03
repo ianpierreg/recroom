@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import FormRegister from "./user/FormRegister";
+import InterestsContainer from "./user/InterestsContainer";
 
 const Register = () => (
     <div>
-        <FormRegister endpoint="/cadastrar/" />
+        <InterestsContainer endpoint="/interests/" />
     </div>
 );
 const wrapper = document.getElementById("app");

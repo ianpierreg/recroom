@@ -7,13 +7,14 @@ module.exports = {
   watch: debug, // Don't watch in production.
   devtool: "source-map", // cheap-source-map will not work with UglifyJsPlugin
   entry: {
-    register: "recroom/frontend/src/components/Register.js",
-    login: "recroom/frontend/src/components/Login.js",
-    listusers: "recroom/frontend/src/components/ListUsers.js",
-    listrooms: "recroom/frontend/src/components/ListRooms.js"
+    register: "./frontend/src/components/Register.js",
+    login: "./frontend/src/components/Login.js",
+    listusers: "./frontend/src/components/ListUsers.js",
+    listrooms: "./frontend/src/components/ListRooms.js",
+    addhouse: "./frontend/src/components/AddHouse.js",
   },
   output: {
-    filename: "recroom/frontend/static/frontend/build/[name].js",
+    filename: "./frontend/static/frontend/build/[name].js",
   },
   resolve: {
     alias: {

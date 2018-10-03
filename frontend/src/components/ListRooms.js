@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import DataProvider from "./common/DataProvider";
 import Table from "./common/Table";
-import ListRoomContainer from "./room/ListRoomContainer";
+import ListRoomContainer from "./house/ListRoomContainer";
 
 const ListRooms = () => (
     <DataProvider endpoint="/api/rooms/"

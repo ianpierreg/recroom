@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', #token system for users
     'frontend', #react gets its own django app here :)
     'users', #app for managing users, including login
-    'room.apps.RoomConfig', #app for managing roooms
+    'house', #app for managing houses, roooms and furniture
     'interest.apps.InterestConfig', #app for managing user's interests
 ]
 
