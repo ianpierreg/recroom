@@ -2,6 +2,7 @@ import React from "react"
 import { render } from "react-dom"
 import FormRegister from "../user/FormRegister";
 import FormLogin from "../user/FormLogin";
+import FormHouse from "../house/FormHouse"
 import InterestsContainer from "../user/InterestsContainer";
 
 export default class TopMenu extends React.Component {
@@ -22,7 +23,7 @@ export default class TopMenu extends React.Component {
      } else if (this.state.modal == "login") {
         return <FormLogin endpoint="/login/" />
      } else if (this.state.modal == "questions") {
-       return <InterestsContainer endpoint="/interesses/" />
+       return <InterestsContainer endpoint="/interesses/" close={false}/>
     }
   }
 

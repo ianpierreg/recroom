@@ -103,3 +103,7 @@
 .minus {
     background-color: red;
 }
+
+.modal {
+    z-index: 100;
+}

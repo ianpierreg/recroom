@@ -17,7 +17,7 @@ export default class TopMenu extends React.Component {
   }
 
   renderModal() {
-     if(this.state.modal == "cadastrar") {
+     if(this.state.modal === "cadastrar") {
          return <FormRegister endpoint="/cadastrar/" />
      } else if (this.state.modal == "login") {
         return <FormLogin endpoint="/login/" />

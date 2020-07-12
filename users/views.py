@@ -69,7 +69,7 @@ def login(request):
     token, _ = Token.objects.get_or_create(user=user)
     return Response({"token": token.key})
 
-
+@csrf_exempt
 @api_view(["POST"])
 def logout(request):
     token_header = request.META.get("HTTP_AUTHORIZATION")[6:]

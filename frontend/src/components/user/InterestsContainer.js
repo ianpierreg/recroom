@@ -12,7 +12,7 @@ class InterestsContainer extends Component {
   state = {
    items: [],
    interests: [],
-   type: null
+   close: false
   };
 
   componentWillMount() {
@@ -105,7 +105,9 @@ class InterestsContainer extends Component {
       return response.json();
     }).then(data => {
       console.log(data.interests, data.type)
-      this.setState({interests: data.interests, type: data.type})
+      if(data.interests) {
+       this.setState({interests: data.interests, type: data.type})
+      }
     })
   }
 
@@ -128,9 +130,15 @@ class InterestsContainer extends Component {
                             <form onSubmit={this.handleSubmit}>
                               {this.renderOptions()}
                               <div className="control">
+                                {this.state.interests.length > 0 ? (
                                 <button type="submit" className="button is-primary is-fullwidth is-medium">
-                                  Cadastrar-se
+                                  Salvar :)
                                 </button>
+                                ) : (
+                                <button type="button" className="button is-primary is-fullwidth is-medium" onClick={this.closeModal.bind(this)}>
+                                  Ok, eu volto depois!
+                                </button>
+                                )}
                               </div>
                             </form>
                         </div>

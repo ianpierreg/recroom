@@ -7,5 +7,5 @@ const AddHouse = () => (
         <FormHouse endpoint="/api/add-house/" />
     </div>
 );
-const wrapper = document.getElementById("admin");
+const wrapper = document.getElementById("app");
 wrapper ? ReactDOM.render(<AddHouse />, wrapper) : null;

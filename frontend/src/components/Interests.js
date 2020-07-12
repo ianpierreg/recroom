@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import InterestsContainer from "./user/InterestsContainer";
 
-const Register = () => (
+const Interests = () => (
     <div>
-        <InterestsContainer endpoint="/interests/" />
+        <InterestsContainer endpoint="/interesses/" />
     </div>
 );
 const wrapper = document.getElementById("app");
-wrapper ? ReactDOM.render(<Register />, wrapper) : null;
+wrapper ? ReactDOM.render(<Interests />, wrapper) : null;

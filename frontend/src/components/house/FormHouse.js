@@ -3,6 +3,8 @@ import { render } from "react-dom"
 import '../../../static/frontend/css/common.css'
 import AmenityContainer from "./AmenityContainer";
 import FurnitureContainer from "./FurnitureContainer";
+import NumberFormat from "react-number-format";
+import CSRFToken from "../common/csrftoken";
 
 export default class FormHouse extends React.Component {
   constructor(props) {
@@ -25,6 +27,7 @@ export default class FormHouse extends React.Component {
       furnitures: {},
       amenities_to_send: {},
       furnitures_to_send: {},
+      close: false
     }
 
     this.addAmenity = this.addAmenity.bind(this)
@@ -41,6 +44,10 @@ export default class FormHouse extends React.Component {
   componentWillMount() {
     this.addAmenity()
     this.addFurniture()
+  }
+
+  closeModal() {
+      this.setState({close: true})
   }
 
   renderAmenities() {
@@ -186,124 +193,68 @@ export default class FormHouse extends React.Component {
 
   render() {
     return (
-        <form onSubmit={this.handleSubmit}>
-          <div className="level">
-            <div className="level-left">
-              <div className="level-item">
-                <div className="title">Cadastro de imóvel</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="columns is-multiline">
-            <div className="column is-9">
-
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">Sobre a casa</label>
-                </div>
-                <div className="field-body">
-                   <div className="field">
-                    <p className="control is-expanded ">
-                      <input className="input" type="number" placeholder="Pessoas"
-                             name="people" value={this.state.people} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                  <div className="field">
-                    <p className="control is-expanded">
-                      <input className="input" type="number" placeholder="Quartos"
+        <div className={this.state.close ? "modal" : "modal is-active"}>
+          <div className="modal-background"></div>
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title is-size-5-mobile">Nos conta mais sobre o seu lugar...</p>
+              <button className="delete" aria-label="close" onClick={this.closeModal.bind(this)}></button>
+            </header>
+            <section className="modal-card-body">
+              <div className="columns is-centered">
+                <div className="column is-10">
+                  <form onSubmit={this.handleSubmit}>
+                    <div className="field is-horizontal">
+                      <div className="field-body">
+                        <div className="field">
+                          <p className="control is-expanded ">
+                            <label htmlFor="people">Quantas pessoas já moram ai contigo?</label>
+                            <input id="people" className="input" type="number"
+                                   name="people" value={this.state.people}
+                                   onChange={this.handleChange}/>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="field is-horizontal">
+                      <div className="field-body">
+                        <div className="field">
+                          <p className="control is-expanded ">
+                            <label htmlFor="people">Quantas quartos tem aí?</label>
+                            <input id="rooms" className="input" type="number"
                              name="rooms" value={this.state.rooms} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                  <div className="field">
-                    <p className="control is-expanded ">
-                      <input className="input" type="number" placeholder="Banheiros"
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="field is-horizontal">
+                      <div className="field-body">
+                        <div className="field">
+                          <p className="control is-expanded ">
+                            <label htmlFor="bathrooms">Quantas pessoas banheiros tem aí?</label>
+                            <input id="bathrooms" className="input" type="number"
                              name="bathrooms" value={this.state.bathrooms} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                  <div className="field">
-                    <p className="control is-expanded ">
-                      <input className="input" type="number" placeholder="Tamanho (m²)"
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="field is-horizontal">
+                      <div className="field-body">
+                        <div className="field">
+                          <p className="control is-expanded ">
+                            <label htmlFor="size">Qual o tamanho da sua residência(m²)?</label>
+                            <input id="size" className="input" type="number"
                              name="size" value={this.state.size} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="field is-horizontal">
-                <div className="field-label is-normal">
-                  <label className="label">Endereço</label>
-                </div>
-                <div className="field-body columns">
-                    <div className="field column remove-padding">
-                      <p className="control is-expanded">
-                        <input className="input" type="text" placeholder="CEP"
-                               name="zipcode" value={this.state.zipcode} onChange={this.handleChange}/>
-                      </p>
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="field column remove-padding">
-                        <p className="control is-expanded">
-                          <input className="input" type="text" placeholder="UF"
-                                 name="state" value={this.state.state} onChange={this.handleChange}/>
-                        </p>
-                    </div>
-                    <div className="field column is-two-thirds remove-padding">
-                        <p className="control is-expanded">
-                          <input className="input" type="text" placeholder="Cidade"
-                          name="city" value={this.state.city} onChange={this.handleChange}/>
-                        </p>
-                    </div>
+                  </form>
                 </div>
               </div>
-
-
-              <div className="field is-horizontal">
-                <div className="field-label"></div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control is-expanded">
-                      <input className="input" type="text" placeholder="Bairro" name="neighborhood" value={this.state.neighborhood} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="field is-horizontal">
-                <div className="field-label"></div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control is-expanded">
-                      <input className="input" type="text" placeholder="Rua" name="street" value={this.state.street} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="field is-horizontal">
-                <div className="field-label"></div>
-                <div className="field-body">
-                  <div className="field">
-                    <p className="control is-expanded">
-                      <input className="input" type="number" placeholder="Número" name="number" value={this.state.number} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                  <div className="field">
-                    <p className="control is-expanded">
-                      <input className="input" type="text" placeholder="Complemento" name="complement" value={this.state.complement} onChange={this.handleChange}/>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {this.renderAmenities()}
-              {this.renderFurnitures()}
-            </div>
+            </section>
           </div>
-          <div className="control">
-            <button type="submit" className="button is-primary is-medium">
-              Cadastrar imóvel
-            </button>
-          </div>
-        </form>
+        </div>
     )
   }
 }
