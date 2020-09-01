@@ -11,28 +11,21 @@ export default class RoomContainer extends React.Component {
 
   render() {
     return (
-        <div className="column is-one-quarter">
-            <div className="card">
-                <div className="card-image">
-                    <figure className="image is-4by3">
-                        <img src={this.props.room.picture_1}
-                             alt="Imagem do quarto"/>
-                    </figure>
-                </div>
-                <div className="card-content fixed-column-height">
-
-                    <div className="content">
-                        <div className="title is-5 fixed-title-height">{this.props.room.description}</div>
-                        <div className="subtitle is-6">R$ {this.props.room.price}</div>
-
-                        <strong>4.5</strong> é a pontuação de afinidade
-                        <br />
-                            <a href="#">#rock</a> <a href="#">#pedalar</a> <a href="#">#neymajr</a> <a
-                            href="#">#ufc</a>
-                    </div>
-                </div>
-            </div>
+      <div className="new-card">
+        <div className="room-pic">
+           <img src={this.props.room.picture_1 || "https://www.iptc.net.br/wp-content/uploads/2019/05/woocommerce-placeholder-600x600.png"}
+                           alt="Imagem do quarto"/>
         </div>
+        <div className="new-card-content">
+          <div className="main-info">
+             <div className="room-name">{this.props.room.description}</div>
+          <div className="price">R$ {this.props.room.price}</div>
+          </div>
+          <div className="rec-info">
+              <div className="points"><strong>{(this.props.room.value*100).toFixed(2)}%</strong> de probabilidade de afinidade (popup explicando afinidade)</div>
+          </div>
+        </div>
+      </div>
     )
   }
 }

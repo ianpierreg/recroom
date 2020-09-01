@@ -85,6 +85,8 @@ class InterestsContainer extends Component {
   };
 
   callWebservice() {
+    console.log(localStorage.getItem("token"))
+
     const conf = {
       method: "post",
       body: JSON.stringify(this.state.items),

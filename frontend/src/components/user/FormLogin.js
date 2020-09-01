@@ -77,7 +77,7 @@ class FormLogin extends Component {
     return (
         <div className={this.state.close ? "modal" : "modal is-active"}>
             <div className="modal-background"></div>
-            <div className="modal-card column is-mobile is-one-quarter">
+            <div className="modal-card column is-mobile is-half">
                 <header className="modal-card-head">
                     <p className="modal-card-title is-size-5-mobile">Entrar</p>
                     <button className="delete" aria-label="close" onClick={this.closeModal.bind(this)}></button>

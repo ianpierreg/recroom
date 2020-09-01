@@ -2,10 +2,11 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
+def site(request):
+    return render(request, 'frontend/site.html')
 
 def listRooms(request):
     return render(request, 'frontend/list_rooms.html')
-
 
 def register(request):
     return render(request, 'frontend/register.html')

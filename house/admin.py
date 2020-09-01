@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Room
+from .models import Room, House, Address
 
 admin.site.register(Room)
+admin.site.register(House)
+admin.site.register(Address)

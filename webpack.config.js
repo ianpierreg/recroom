@@ -8,6 +8,7 @@ module.exports = {
   devtool: "source-map", // cheap-source-map will not work with UglifyJsPlugin
   entry: {
     register: "./frontend/src/components/Register.js",
+    site: "./frontend/src/components/Site.js",
     login: "./frontend/src/components/Login.js",
     listusers: "./frontend/src/components/ListUsers.js",
     listrooms: "./frontend/src/components/ListRooms.js",
@@ -74,23 +75,27 @@ module.exports = {
           presets: ['react', 'es2015']
         }
       },
-      {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 2000000
-            }
-          }
-        ]
-      },
+      // {
+      //   test: /\.(png|jpg|gif)$/,
+      //   use: [
+      //     {
+      //       loader: 'url-loader',
+      //       options: {
+      //         limit: 2000000
+      //       }
+      //     }
+      //   ]
+      // },
       {
         test: /\.css$/,
         use: [
           { loader: "style-loader" },
           { loader: "css-loader" }
         ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+        loader: 'url-loader?limit=100000'
       }
     ]
   }

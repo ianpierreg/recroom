@@ -1,5 +1,6 @@
 # users/views.py
 import random
+from IPython import embed
 
 from django.contrib.auth.models import Group
 from rest_framework.authtoken.models import Token
@@ -21,9 +22,13 @@ from users.serializers import CreateUserSerializer
 @csrf_exempt
 @api_view(['POST'])
 def get_save_interests(request):
+
     token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
+
     token = Token.objects.get(key=token_header)
+    # embed()
     profile = Profile.objects.get(user_id=token.user_id)
+    print(request.data)
 
     if(request.data):
         interests = Interest.objects.filter(id__in=request.data)

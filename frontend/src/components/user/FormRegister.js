@@ -287,7 +287,9 @@ class FormRegister extends Component {
         return response.json();
     }).then(data => {
         localStorage.setItem("token", "Token "+data.token)
-        document.getElementById('questions').click();
+      debugger
+        location.reload();
+        // document.getElementById('questions').click();
     })
   };
 
