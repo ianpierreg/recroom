@@ -7,10 +7,9 @@ module.exports = {
   watch: debug, // Don't watch in production.
   devtool: "source-map", // cheap-source-map will not work with UglifyJsPlugin
   entry: {
-    register: "./frontend/src/components/Register.js",
-    login: "./frontend/src/components/Login.js",
     listusers: "./frontend/src/components/ListUsers.js",
     listrooms: "./frontend/src/components/ListRooms.js",
+    main: "./frontend/src/components/Main.js",
     addhouse: "./frontend/src/components/AddHouse.js",
   },
   output: {
@@ -49,13 +48,22 @@ module.exports = {
     }),
   ],
   module: {
- rules: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader"
         }
+      },
+       {
+        test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+          }
+        }],
       },
       {
         test: /\.css$/,

@@ -1,66 +1,72 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { render } from "react-dom"
 import RoomContainer from "./RoomContainer";
 import TopMenu from "../common/TopMenu";
 
 
-export default class ListRoomContainer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.renderRooms = this.renderRooms.bind(this)
-  }
+export default function ListRoomContainer({ endpoint, token }) {
+  const [data, setData] = useState()
 
-  renderRooms() {
-      if(this.props.data !== undefined && this.props.data.length > 0) {
-          let roomComponents =  this.props.data.map((room) =>
-             <RoomContainer room={room} key={room.id} />
-          )
+  useEffect(() => {
+    const conf = {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }
+    }
 
-          const size = 4; let arrayOfArrays = [];
-          for (let i=0; i<roomComponents.length; i+=size) {
-             arrayOfArrays.push(roomComponents.slice(i,i+size));
-          }
+    fetch(endpoint, conf)
+      .then(response => {
+        if (response.status !== 200) setData()
+        return response.json();
+      })
+      .then(data => setData(data))
+  }, [token])
 
-          let arrayOfColumns = []
-          for(let j = 0; j < arrayOfArrays.length; j++) {
-              arrayOfColumns.push(
-                  <div className="columns">
-                      {
-                          arrayOfArrays[j].map((room) =>
-                            room
-                         )
-                      }
-                  </div>
-              )
-          }
+  const renderRooms = () => {
+    if(!data) return
 
-          return arrayOfColumns.map((column) =>
-            column
-          )
-      } else {
-          return (
-           <div>
-            Nenhum quarto cadastrado.
-          </div>
-          )
+    const { load, rooms } = data
+    if(load === 0) return null
+    if(rooms && rooms.length > 0) {
+      let roomComponents =  rooms.map((room) =>
+        <RoomContainer room={room} key={room.id} />
+      )
 
+      const size = 4; let arrayOfArrays = [];
+      for (let i=0; i<roomComponents.length; i+=size) {
+        arrayOfArrays.push(roomComponents.slice(i,i+size));
       }
 
+      let arrayOfColumns = []
+      for(let j = 0; j < arrayOfArrays.length; j++) {
+        arrayOfColumns.push(
+          <div className="columns">
+            {arrayOfArrays[j].map((room) => room)}
+          </div>
+        )
+      }
 
-  }
-
-
-
-  render() {
-    return (
+      return arrayOfColumns.map((column) => column)
+    } else {
+      return (
         <div>
-            <TopMenu/>
-            <section className="section">
-                <div className="container">
-                    {this.renderRooms()}
-                </div>
-            </section>
+          Nenhum quarto cadastrado.
         </div>
-    )
+      )
+
+    }
+
+
   }
+
+  return (
+    <section className="section">
+      <div className="container">
+        {renderRooms()}
+      </div>
+    </section>
+  )
 }

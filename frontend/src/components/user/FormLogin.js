@@ -1,46 +1,39 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import '../../../static/frontend/css/common.css';
 import CSRFToken from '../common/csrftoken';
 
-class FormLogin extends Component {
-  static propTypes = {
-    endpoint: PropTypes.string.isRequired
-  };
+export default function FormLogin({ endpoint, clos, showQuestions,setToken, show }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  state = {
-   email: "",
-   password:"",
-   close: false
-  };
+  const handleEmailChange = e => setEmail(e.target.value)
 
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
+  const handlePasswordChange = e => setPassword(e.target.value)
 
-  getCookie(cookieName) {
-      let cookieValue = document.cookie
-      let cookieStart = cookieValue.indexOf(" " + cookieName + "=")
-      if (cookieStart == -1) {
-        cookieStart = cookieValue.indexOf(cookieName + "=")
+  const getCookie = (cookieName) => {
+    let cookieValue = document.cookie
+    let cookieStart = cookieValue.indexOf(" " + cookieName + "=")
+    if (cookieStart === -1) {
+      cookieStart = cookieValue.indexOf(cookieName + "=")
+    }
+    if (cookieStart === -1) {
+      cookieValue = null
+    } else {
+      cookieStart = cookieValue.indexOf("=", cookieStart) + 1
+      let cookieEnd = cookieValue.indexOf(";", cookieStart)
+      if (cookieEnd === -1) {
+        cookieEnd = cookieValue.length
       }
-      if (cookieStart == -1) {
-        cookieValue = null
-      } else {
-        cookieStart = cookieValue.indexOf("=", cookieStart) + 1
-        let cookieEnd = cookieValue.indexOf(";", cookieStart)
-        if (cookieEnd == -1) {
-          cookieEnd = cookieValue.length
-        }
-        cookieValue = unescape(cookieValue.substring(cookieStart,cookieEnd))
-      }
-      return cookieValue
+      cookieValue = unescape(cookieValue.substring(cookieStart,cookieEnd))
+    }
+    return cookieValue
   }
 
-  handleSubmit = e => {
-    const csrftoken = this.getCookie('csrftoken');
-    e.preventDefault();
-    const {  email, password } = this.state;
+  const handleSubmit = e => {
+    const csrftoken = getCookie('csrftoken');
+    e.preventDefault()
     const user = { email, password }
     const conf = {
       method: "post",
@@ -51,86 +44,83 @@ class FormLogin extends Component {
         'X-CSRFToken': csrftoken
       }
     };
-    fetch(this.props.endpoint, conf).then(response => {
-         if (response.status !== 200) {
-          return null;
-        }
-        return response.json();
+    fetch(endpoint, conf).then(response => {
+      debugger
+      if (response.status !== 200) {
+        return null
+      }
+      return response.json()
     }).then(data => {
+      if (data) {
+        debugger
+        console.log(data, 'data')
         localStorage.setItem("user", data.user)
-        localStorage.setItem("token", "Token "+data.token)
-        location.reload();
+        setToken("Token " + data.token)
+        showQuestions()
+      } else {
+        setError('Email ou senha incorretos, verifique os dados e tente novamente.')
+      }
     })
   };
 
-  removeElement(id) {
-    const elem = document.getElementById(id);
-    return elem.parentNode.removeChild(elem);
+  const removeElement = (id) => {
+    const elem = document.getElementById(id)
+    return elem.parentNode.removeChild(elem)
   }
 
-  closeModal() {
-      this.setState({close: true})
-  }
-
-  render() {
-    const { email, password} = this.state;
-    return (
-        <div className={this.state.close ? "modal" : "modal is-active"}>
-            <div className="modal-background"></div>
-            <div className="modal-card column is-mobile is-one-quarter">
-                <header className="modal-card-head">
-                    <p className="modal-card-title is-size-5-mobile">Entrar</p>
-                    <button className="delete" aria-label="close" onClick={this.closeModal.bind(this)}></button>
-                </header>
-                <section className="modal-card-body">
-                    <div className="columns is-centered">
-                        <div className="column is-10">
-                             <form onSubmit={this.handleSubmit}>
-                                  <div className="field">
-                                     <div className="control">
-                                      <input
-                                        className="input is-medium"
-                                        type="email"
-                                        name="email"
-                                        placeholder="Email"
-                                        onChange={this.handleChange}
-                                        value={email}
-                                        required
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="field">
-                                    <div className="control">
-                                      <input
-                                        className="input is-medium"
-                                        type="password"
-                                        name="password"
-                                        placeholder="Senha"
-                                        onChange={this.handleChange}
-                                        value={password}
-                                        required
-                                      />
-                                    </div>
-                                  </div>
-                                  <CSRFToken csrf={this.getCookie('csrftoken')}/>
-                                  <div className="control">
-                                    <button type="submit" className="button is-primary is-fullwidth is-medium">
-                                      Entrar
-                                    </button>
-                                  </div>
-                              </form>
-                              <div className="soft-line-wrapper">
-                                  <div className="soft-line"></div>
-                              </div>
-                        </div>
-                    </div>
-                     <div className="center-text">
-                            Ainda não tem conta? <a>Cadastrar</a>
-                     </div>
-                </section>
+  return (
+    <div className={show ? "modal is-active" : "modal"}>
+      <div className="modal-background" />
+      <div className="modal-card column is-mobile is-one-third">
+        <header className="modal-card-head">
+          <span className="modal-card-title is-size-5-mobile">Entrar</span>
+          <button className="delete" aria-label="close" onClick={close} />
+        </header>
+        <section className="modal-card-body">
+          <div className="columns is-centered">
+            <div className="column is-10">
+              <form onSubmit={handleSubmit}>
+                <div className="field">
+                  <div className="control">
+                    <input
+                      className="input is-medium"
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      onChange={handleEmailChange}
+                      value={email}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <input
+                      className="input is-medium"
+                      type="password"
+                      name="password"
+                      placeholder="Senha"
+                      onChange={handlePasswordChange}
+                      value={password}
+                      required
+                    />
+                  </div>
+                </div>
+                <CSRFToken csrf={getCookie('csrftoken')}/>
+                <div className="control">
+                  <button type="submit" className="button is-primary is-fullwidth is-medium">
+                    Entrar
+                  </button>
+                </div>
+              </form>
+              <div className="soft-line-wrapper">
+                <div className="soft-line" />
+                 <div className="error">{error}</div>
+              </div>
             </div>
-        </div>
-    );
-  }
+          </div>
+        </section>
+      </div>
+    </div>
+  )
 }
-export default FormLogin;

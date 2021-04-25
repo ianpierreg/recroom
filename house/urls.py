@@ -20,6 +20,6 @@ from house import views
 
 urlpatterns = [
     path('api/add-house/', views.create_house, name='create_house'),
-    path('api/rooms/', views.RoomListView.as_view()),
+    path('api/rooms/', views.get_rooms),
 ]
 

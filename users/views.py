@@ -21,7 +21,8 @@ from users.serializers import CreateUserSerializer
 @csrf_exempt
 @api_view(['POST'])
 def get_save_interests(request):
-    token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
+    # import ipdb; ipdb.set_trace()
+    token_header = request.META.get("HTTP_AUTHORIZATION")[7:][:-1]
     token = Token.objects.get(key=token_header)
     profile = Profile.objects.get(user_id=token.user_id)
 
@@ -39,7 +40,7 @@ def get_save_interests(request):
         interest_type = random.choice(types_available)
         interests = Interest.objects.filter(interest_type=interest_type)
         serializers = InterestSerializer(interests, many=True)
-        return Response({"type": interest_type.name, "interests": serializers.data}, status=status.HTTP_200_OK)
+        return Response({"type": interest_type.name, "description": interest_type.description, "interests": serializers.data}, status=status.HTTP_200_OK)
     else:
         return Response({"status": "Ok", "msg": "As perguntas terminaram!"}, status=status.HTTP_200_OK)
 

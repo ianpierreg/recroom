@@ -6,8 +6,11 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from house.serializers import HouseSerializer
+from house.serializers import RoomSerializer
 from . import models
 from . import serializers
 
@@ -26,7 +29,19 @@ def create_house(request):
     else:
         return Response(house._errors, status=status.HTTP_400_BAD_REQUEST)
 
-class RoomListView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = models.Room.objects.all()
-    serializer_class = serializers.RoomSerializer
+@api_view(['GET'])
+def get_rooms(request):
+    token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
+    # import ipdb;
+    # ipdb.set_trace()
+    try:
+        token = Token.objects.get(key=token_header)
+    except Token.DoesNotExist:
+        return Response({"status": "Nao autenticado", "load": 0}, status=status.HTTP_200_OK)
+
+
+    rooms = models.Room.objects.all()
+    serializers_room = RoomSerializer(rooms, many=True)
+    return Response({"rooms": serializers_room.data}, status=status.HTTP_200_OK)
+
+

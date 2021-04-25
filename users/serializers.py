@@ -10,7 +10,7 @@ class CreateProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('birthdate', 'cellphone', 'cpf', 'group')
+        fields = ('birthdate', 'group')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

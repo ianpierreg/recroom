@@ -1,7 +1,6 @@
 .soft-line-wrapper {
     margin-top: 2vh;
     margin-bottom: 2vh;
-
 }
 
 .soft-line {
@@ -62,6 +61,7 @@
     text-align: center;
     margin-bottom: 2vh;
     font-size: 3.2vh;
+    color: #000;
 }
 
 .remove-padding {

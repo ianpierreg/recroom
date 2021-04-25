@@ -1,28 +1,28 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-class DataProvider extends Component {
 
+class DataProvider extends Component {
   static propTypes = {
     endpoint: PropTypes.string.isRequired,
-    render: PropTypes.func.isRequired
+    render: PropTypes.func.isRequired,
+    token: PropTypes.string
   };
 
   state = {
-      data: [],
-      loaded: false,
-      placeholder: "Loading..."
+    data: [],
+    loaded: false,
+    placeholder: "Loading..."
   };
 
   componentDidMount() {
-      console.log(localStorage.getItem("token"));
-      const conf = {
-          method: "GET",
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': localStorage.getItem("token")
-          }
+    const conf = {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': this.props.token
       }
+    }
 
     fetch(this.props.endpoint, conf)
       .then(response => {
@@ -39,4 +39,5 @@ class DataProvider extends Component {
     return loaded ? this.props.render(data) : <p>{placeholder}</p>;
   }
 }
+
 export default DataProvider;
