@@ -28,7 +28,9 @@ def get_save_interests(request):
 
     if(request.data):
         interests = Interest.objects.filter(id__in=request.data)
-        profile.answered += 1
+        # import ipdb
+        # ipdb.set_trace()
+        profile.answered += len(request.data)
         profile.save()
         for interest in interests:
             profile.interests.add(interest)

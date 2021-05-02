@@ -109,6 +109,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
       }
     }).finally(() => {
       setLoading(false)
+      setItems([])
     })
   }
 

@@ -2843,3 +2843,29 @@ input {
 .already-has-account {
   color: #000;
 }
+
+.go-top-wrapper {
+    position: sticky;
+    bottom: 50px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+button.go-top {
+    background: black;
+    color: #00C4A7 !important;
+}
+
+.title-medal {
+    display: flex;
+    height: 62px;
+    justify-content: space-between;
+}
+
+.medal img  {
+  height: 62px;
+}
+
+input[type="submit"]:hover:active, input[type="reset"]:hover:active, input[type="button"]:hover:active, button:hover:active, .button:hover:active {
+    background-color: rgba(0, 0, 0, 0.75);
+}

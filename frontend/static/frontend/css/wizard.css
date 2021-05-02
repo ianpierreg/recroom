@@ -4941,6 +4941,7 @@ a.tag:hover {
   color: #4a4a4a;
   max-width: 100%;
   position: relative;
+  display: flex;
 }
 
 .card-header {
@@ -4986,10 +4987,17 @@ a.tag:hover {
 .card-image {
   display: block;
   position: relative;
+  width: 30%;
+}
+
+.card-image figure {
+  height: 100%;
+  width: 100%;
 }
 
 .card-content {
   padding: 1.5rem;
+  width: 70%;
 }
 
 .card-footer {
@@ -9496,6 +9504,7 @@ label.panel-block:hover {
 }
 
 .section {
+  min-height: 50vh;
   padding: 3rem 1.5rem;
 }
 

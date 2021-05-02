@@ -8,11 +8,15 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from house.services import CosineCalculator
+import ipdb
 
 from house.serializers import HouseSerializer
 from house.serializers import RoomSerializer
+from users.models import Profile
 from . import models
 from . import serializers
+from .models import House, Room
 
 
 @csrf_exempt
@@ -29,19 +33,43 @@ def create_house(request):
     else:
         return Response(house._errors, status=status.HTTP_400_BAD_REQUEST)
 
+# @api_view(['GET'])
+# def get_rooms(request):
+#     token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
+#     # import ipdb;
+#     # ipdb.set_trace()
+#     try:
+#         token = Token.objects.get(key=token_header)
+#     except Token.DoesNotExist:
+#         return Response({"status": "Nao autenticado", "load": 0}, status=status.HTTP_200_OK)
+#
+#
+#     rooms = models.Room.objects.all()
+#     serializers_room = RoomSerializer(rooms, many=True)
+#     return Response({"rooms": serializers_room.data}, status=status.HTTP_200_OK)
+#
+
+
+
+
+# @csrf_exempt
 @api_view(['GET'])
 def get_rooms(request):
     token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
-    # import ipdb;
-    # ipdb.set_trace()
-    try:
-        token = Token.objects.get(key=token_header)
-    except Token.DoesNotExist:
-        return Response({"status": "Nao autenticado", "load": 0}, status=status.HTTP_200_OK)
+    token = Token.objects.get(key=token_header)
+    cosine = CosineCalculator()
+    houses = House.objects.all()
+    future_tenant = Profile.objects.get(user_id=token.user_id)
+    houses = cosine.calculate_similarity_all_houses(houses, future_tenant)
+    rooms = []
+    for house in houses:
+        rooms_buffer = Room.objects.filter(house=house, tenant__isnull=True).all()
+        for room_buffer in rooms_buffer:
+            room_serializer = serializers.RoomSerializer(room_buffer)
+            # ipdb.set_trace()
+            # if room_serializer.tenant is not None: continue
+            new_room = {"value": house.value}
+            new_room.update(room_serializer.data)
+            rooms.append(new_room)
 
-
-    rooms = models.Room.objects.all()
-    serializers_room = RoomSerializer(rooms, many=True)
-    return Response({"rooms": serializers_room.data}, status=status.HTTP_200_OK)
-
-
+    return Response({"rooms": rooms}, status=status.HTTP_200_OK)
