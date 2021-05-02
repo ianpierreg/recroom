@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "browserify": "^16.1.0",
     "bulma-calendar": "^5.0.1",
     "bulma-carousel": "^3.0.0",
