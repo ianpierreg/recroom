@@ -10,8 +10,12 @@ export default function InterestsContainer({ endpoint, show, close }) {
   const [loading, setLoading] = useState(false)
   const [type, setType] = useState('')
   const [description, setDescription] = useState('')
+  const [importance, setImportance] = useState()
+  const [importanceBlank, setImportanceBlank] = useState(false)
 
   useEffect(() => { callWebservice() }, [show])
+
+  const handleChangeRadio = e => setImportance(e.target.value)
 
   const renderOptions = () => {
     if(interests.length > 0) {
@@ -79,11 +83,10 @@ export default function InterestsContainer({ endpoint, show, close }) {
   }
 
   const callWebservice = () => {
-    setLoading(true)
 
     const conf = {
       method: "post",
-      body: JSON.stringify(items),
+      body: JSON.stringify({items, importance }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -91,6 +94,14 @@ export default function InterestsContainer({ endpoint, show, close }) {
       }
     }
     let _this = this
+    if (interests.length > 0 && items > 0 && importance === undefined) {
+      setImportanceBlank(true)
+      return
+    }
+
+    setImportanceBlank(false)
+    setLoading(true)
+
     fetch(endpoint, conf).then(response => {
       if (response.ok) {
         if (response.status !== 200) {
@@ -137,9 +148,83 @@ export default function InterestsContainer({ endpoint, show, close }) {
                 {renderOptions()}
                 <div className="control">
                   {interests.length > 0 ? (
-                    <button type="submit" className="button is-primary is-fullwidth is-medium">
-                      Salvar :)
-                    </button>
+                    <React.Fragment>
+                      <div className="importance">
+                        <label htmlFor="quantity">Importância deste tópico para você (de 0 a 5) i:</label>
+                        <div className="tenant-landlord field-body">
+                          <div className="field">
+                            <input 
+                              id="0" 
+                              className="is-checkradio" 
+                              type="radio" 
+                              name="importance" 
+                              value="0" 
+                              onChange={handleChangeRadio}
+                            />
+                            <label className="label-radio" htmlFor="0">0</label>
+                          </div>
+                          <div className="field">
+                            <input 
+                              id="1" 
+                              className="is-checkradio"
+                              type="radio" 
+                              name="importance" 
+                              value="1"
+                              onChange={handleChangeRadio}
+                            />
+                            <label className="label-radio" htmlFor="1">1</label>
+                          </div>
+                          <div className="field">
+                            <input
+                              id="2"
+                              className="is-checkradio" 
+                              type="radio" 
+                              name="importance"
+                              value="2" 
+                              onChange={handleChangeRadio}
+                            />
+                            <label className="label-radio" htmlFor="2">2</label>
+                          </div>
+                          <div className="field">
+                            <input 
+                              id="3" 
+                              className="is-checkradio" 
+                              type="radio" 
+                              name="importance" 
+                              value="3" 
+                              onChange={handleChangeRadio}
+                            />
+                            <label className="label-radio" htmlFor="3">3</label>
+                          </div>
+                          <div className="field">
+                            <input 
+                              id="4" 
+                              className="is-checkradio" 
+                              type="radio" 
+                              name="importance" 
+                              value="4" 
+                              onChange={handleChangeRadio}
+                            />
+                            <label className="label-radio" htmlFor="4">4</label>
+                          </div>
+                          <div className="field">
+                            <input 
+                              id="5" 
+                              className="is-checkradio" 
+                              type="radio" 
+                              name="importance" 
+                              value="5" 
+                              onChange={handleChangeRadio}
+                            />
+                            <label className="label-radio" htmlFor="5">5</label>
+                          </div>
+                        </div>
+                      </div>
+                      {importanceBlank && <div className="error">Não é possível enviar uma resposta sem indicar a importância do tópico.</div>}
+                      <button type="submit" className="button is-primary is-fullwidth is-medium">
+                        Salvar :)
+                      </button>
+                    </React.Fragment>
                   ) : (
                     <button type="button" className="button is-primary is-fullwidth is-medium" onClick={closeModal}>
                       Ok, eu volto depois!

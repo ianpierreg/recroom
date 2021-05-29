@@ -57,10 +57,12 @@ def create_house(request):
 def get_rooms(request):
     token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
     token = Token.objects.get(key=token_header)
+    profile = Profile.objects.get(user_id=token.user_id)
+
     cosine = CosineCalculator()
     houses = House.objects.all()
     future_tenant = Profile.objects.get(user_id=token.user_id)
-    houses = cosine.calculate_similarity_all_houses(houses, future_tenant)
+    houses = cosine.calculate_similarity_all_houses(houses, future_tenant, profile)
     rooms = []
     for house in houses:
         rooms_buffer = Room.objects.filter(house=house, tenant__isnull=True).all()

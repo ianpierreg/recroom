@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import ipdb
 
 from house.models import House, Room
-from users.models import Profile
+from users.models import Profile, ProfileInterests
 import logging
 from django.contrib.auth.models import User
 
@@ -14,15 +14,16 @@ from interest.models import InterestType
 
 
 class CosineCalculator:
-    def calculate_similarity_all_houses(self, houses, future_tenant):
+    def calculate_similarity_all_houses(self, houses, future_tenant, profile):
         similarity_by_house = []
 
         for house in houses:
-            house.value = self.calculate_similarity_house_tenant(house, future_tenant)
+            house.value = self.calculate_similarity_house_tenant(house, future_tenant, profile)
             similarity_by_house.append(house)
+
         return sorted(similarity_by_house, key=lambda x: x.value, reverse=True)
 
-    def calculate_similarity_house_tenant(self, house, future_tenant):
+    def calculate_similarity_house_tenant(self, house, future_tenant, profile):
         comparated_value = 0
         similarity = 0
         values_for_attributes = []
@@ -48,11 +49,13 @@ class CosineCalculator:
         tenants_interests_boolean = [[]] * len(tenants)
         for interest_type in interest_types:
             interests_future_tenant_boolean += self.get_boolean_list(interests_future_tenant.get(interest_type.name),
-                                                                     interest_type.name)
+                                                                     interest_type.name,
+                                                                     profile)
             for i, tenant_interests in enumerate(tenants_interests):
                 # ipdb.set_trace()
                 tenants_interests_boolean[i] = tenants_interests_boolean[i] + self.get_boolean_list(tenant_interests.get(interest_type.name),
-                                                                      interest_type.name)
+                                                                      interest_type.name,
+                                                                      profile)
 
         similarity = 0
 
@@ -99,9 +102,13 @@ class CosineCalculator:
         for interest_without_type in interests_without_type:
             type_interest = interest_without_type.interest_type.name
             if type_interest not in interests_tenant:
-                interests_tenant[type_interest] = [interest_without_type.name]
+                profile_interest = ProfileInterests.objects.get(interest_id=interest_without_type.id, profile_id=tenant.id)
+                interests_tenant[type_interest] = {
+                    'importance': profile_interest.importance,
+                    'interests': [interest_without_type.name]
+                }
             else:
-                interests_tenant[type_interest].append(interest_without_type.name)
+                interests_tenant['interests'][type_interest].append(interest_without_type.name)
         return interests_tenant
 
     def attributes_media(self, values_for_attributes):
@@ -136,18 +143,21 @@ class CosineCalculator:
         except ZeroDivisionError:
             return 0
 
-    def get_boolean_list(self, user_interests, interest_type):
+    def get_boolean_list(self, user_interests, interest_type, profile):
         attributes_x_type = []
+
         interests_by_type = Interest.objects.filter(interest_type__name=interest_type).order_by('name')
         for interest_by_type in interests_by_type:
-            found = False
-            for user_interest in user_interests:
+            # found = False
+            value = 0
+            for user_interest in user_interests['interests']:
                 if interest_by_type.name == user_interest:
-                    found = True
+                    # found = True
+                    value = user_interests['importance']
                     break
-            if found:
-                attributes_x_type.append(1)
-            else:
-                attributes_x_type.append(0)
+            # if found:
+            attributes_x_type.append(value)
+            # else:
+            #     attributes_x_type.append(0)
         # ipdb.set_trace()
         return attributes_x_type

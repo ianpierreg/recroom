@@ -14,8 +14,13 @@ from rest_framework.status import HTTP_401_UNAUTHORIZED
 
 from interest.models import Interest, InterestType
 from interest.serializers import InterestSerializer
-from users.models import Profile
+from users.models import Profile, ProfileInterests
 from users.serializers import CreateUserSerializer
+
+import ipdb
+
+
+#
 
 
 @csrf_exempt
@@ -26,14 +31,15 @@ def get_save_interests(request):
     token = Token.objects.get(key=token_header)
     profile = Profile.objects.get(user_id=token.user_id)
 
-    if(request.data):
-        interests = Interest.objects.filter(id__in=request.data)
-        # import ipdb
-        # ipdb.set_trace()
-        profile.answered += len(request.data)
+    if(request.data['items']):
+        interests = Interest.objects.filter(id__in=request.data['items'])
+        profile.answered += len(request.data['items'])
         profile.save()
         for interest in interests:
             profile.interests.add(interest)
+            profile_interest = ProfileInterests.objects.get(interest_id=interest.id, profile_id=profile.id)
+            profile_interest.importance = request.data['importance']
+            profile_interest.save()
 
     interests_buff = profile.interests.all().values_list("interest_type_id", flat=True)
     types_available = InterestType.objects.exclude(id__in = interests_buff)
@@ -49,6 +55,7 @@ def get_save_interests(request):
 @csrf_exempt
 @api_view(['POST'])
 def create_user(request):
+    # ipdb.set_trace()
     user = CreateUserSerializer(data=request.data)
     if user.is_valid():
         profile_group = Group.objects.get(name=user.validated_data['profile']['group'])

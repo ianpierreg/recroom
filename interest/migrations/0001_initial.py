@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Tipo de interesse')),
                 ('description', models.CharField(blank=True, max_length=400, null=True, verbose_name='Descrição do interesse')),
+                # ('profiles', models.ManyToManyField(through='users.ProfileInterests', to='users.Profile')),
             ],
             options={
                 'verbose_name': 'Interesse',

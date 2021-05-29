@@ -12,7 +12,6 @@ class CreateProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('birthdate', 'group')
 
-
 class CreateUserSerializer(serializers.ModelSerializer):
     profile = CreateProfileSerializer()
 

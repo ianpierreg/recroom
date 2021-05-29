@@ -9525,5 +9525,19 @@ label.panel-block:hover {
 .error {
   color: red;
   text-align: center;
+  font-size: 14px;
 }
 /*# sourceMappingURL=bulma.css.map */
+
+/*.importance {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*}*/
+
+/*.importance label {*/
+/*  margin: 0;*/
+/*}*/
+
+/*.importance input {*/
+
+/*}*/
