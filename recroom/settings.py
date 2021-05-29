@@ -25,7 +25,7 @@ SECRET_KEY = '4@_&=i975v8gc+zh6dpt+pdc9xtts_b2o3dg1sx%%!b%dfk5zm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['recroom.herokuapp.com']
+ALLOWED_HOSTS = ['recroom.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -129,7 +129,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'frontend/static/frontend')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
