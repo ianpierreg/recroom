@@ -25,7 +25,7 @@ SECRET_KEY = '4@_&=i975v8gc+zh6dpt+pdc9xtts_b2o3dg1sx%%!b%dfk5zm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['recroom.herokuapp.com']
 
 
 # Application definition
