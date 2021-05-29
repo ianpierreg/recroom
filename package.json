@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack",
     "postinstall": "npm run build",
-    "build": "npm run build"
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
