@@ -8,3 +8,4 @@ python-dotenv==0.17.1
 scikit_learn==0.24.2
 Pillow
 gunicorn
+psycopg2
