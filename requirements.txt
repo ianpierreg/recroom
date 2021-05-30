@@ -1,10 +1,11 @@
-ipdb==0.13.7
 numpy==1.20.1
 whitenoise==5.2.0
 Django==3.1.7
+ipdb==0.13.7
+dj_database_url==0.5.0
 djangorestframework==3.12.4
+python-dotenv==0.17.1
 scikit_learn==0.24.2
 Pillow
 gunicorn
 dj_database_url
-python-dotenv
