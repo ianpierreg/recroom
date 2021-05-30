@@ -1,8 +1,9 @@
 ipdb==0.13.7
 numpy==1.20.1
+whitenoise==5.2.0
 Django==3.1.7
 djangorestframework==3.12.4
 scikit_learn==0.24.2
 Pillow
 gunicorn
-whitenoise
+python-dotenv
