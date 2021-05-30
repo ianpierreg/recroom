@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import dj_database_url
 import dotenv
+# import django_heroku
 
 
 
@@ -145,7 +146,7 @@ SITE_ID = 1
 SESSION_COOKIE_SECURE = False
 
 # This should already be in your settings.py
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 # This is new
 options = DATABASES['default'].get('OPTIONS', {})
 options.pop('sslmode', None)
