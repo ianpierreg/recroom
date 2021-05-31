@@ -93,7 +93,11 @@ export default function ListRoomContainer({ endpoint, token }) {
           pageStart={0}
           loadMore={nextPage}
           hasMore={hasMore}
-          loader={<div className="loader" key={0}>Loading ...</div>}
+          loader={(
+            <div className="loader" key={0}>
+              <img src="/media/loading.png" alt="icone de carregamento" />
+          </div>
+          )}
         >
           {renderRooms()}
         </InfiniteScroll>
