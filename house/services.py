@@ -108,7 +108,8 @@ class CosineCalculator:
                     'interests': [interest_without_type.name]
                 }
             else:
-                interests_tenant['interests'][type_interest].append(interest_without_type.name)
+                interests_tenant[type_interest]['interests'].append(interest_without_type.name)
+
         return interests_tenant
 
     def attributes_media(self, values_for_attributes):
