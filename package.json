@@ -15,7 +15,7 @@
     "browserify": "^16.1.0",
     "bulma-calendar": "^5.0.1",
     "bulma-carousel": "^3.0.0",
-    "chart.js": "^1.1.1",
+    "chart.js": "^2.9.4",
     "classnames": "^2.3.1",
     "compression-webpack-plugin": "^1.1.11",
     "gerador-validador-cpf": "^3.1.3",
