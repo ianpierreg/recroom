@@ -86,7 +86,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
 
     const conf = {
       method: "post",
-      body: JSON.stringify({items, importance }),
+      body: JSON.stringify({ items, importance }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

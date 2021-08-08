@@ -6,6 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 export default function ListRoomContainer({ endpoint, token }) {
   const pageSize = 10
   const [data, setData] = useState()
+  const [dataBound, setDataBound] = useState()
   const [hasMore, setHasMore] = useState(true)
   const [showButton, setShowButton] = useState(false)
   const [listCount, setListCount] = useState(10)
@@ -14,9 +15,40 @@ export default function ListRoomContainer({ endpoint, token }) {
     behavior: "smooth",
   })
 
+  const getRoomValuations = () => {
+        const conf = {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }
+    }
+
+    fetch('/valuations/', conf)
+      .then(response => {
+        if (response.status !== 200) return null
+        return response.json()
+      })
+      .then(res => {
+        console.log('valuations', res)
+        if (!res || !res.valuations) return
+        const roomsBound = data.rooms.map(room => {
+          room.valuation = res.valuations.find(valuation => valuation.room === room.id)
+          return room
+        })
+        setDataBound({ ...data, rooms: roomsBound })
+      })
+  }
+
+  useEffect(() => {
+    if(!data || !data.rooms) return
+    getRoomValuations()
+  }, [data])
+
   const nextPage = (page) => {
-    if (!data || !data.rooms) return
-    if ((data.rooms.length <= listCount)) {
+    if (!dataBound || !dataBound.rooms) return
+    if ((dataBound.rooms.length <= listCount)) {
       setHasMore(false)
       return
     }
@@ -39,18 +71,19 @@ export default function ListRoomContainer({ endpoint, token }) {
     fetch(endpoint, conf)
       .then(response => {
         if (response.status !== 200) setData()
-        return response.json();
+        return response.json()
       })
-      .then(data => {
-        if (!data || !data.rooms) return
-        setData(data)
+      .then(res => {
+        if (!res || !res.rooms) return
+        console.log('rooms', res)
+        setData(res)
       })
   }, [token])
 
   const renderRooms = () => {
-    if(!data) return
+    if(!dataBound) return
 
-    const { load, rooms } = data
+    const { load, rooms } = dataBound
     if(load === 0) return null
     if(rooms && rooms.length > 0) {
 
@@ -70,9 +103,8 @@ export default function ListRoomContainer({ endpoint, token }) {
           default:
             medalPath = undefined
         }
-       return <RoomContainer room={room} key={room.id} medal={medalPath} />
+       return <RoomContainer position={index+1} room={room} key={room.id} medal={medalPath} />
       })
-
 
       return roomComponents
     } else {
@@ -82,21 +114,20 @@ export default function ListRoomContainer({ endpoint, token }) {
         </div>
       )
     }
-
-
   }
 
   return (
     <section className="section" ref={ref}>
+      <h2 className="list-title">Ranking de quartos</h2>
       <div className="container">
         <InfiniteScroll
           pageStart={0}
           loadMore={nextPage}
           hasMore={hasMore}
           loader={(
-            <div className="loader" key={0}>
-              <img src="/media/loading.png" alt="icone de carregamento" />
-          </div>
+            <div className="loader-gif" key={0}>
+              <img src="/media/ux-laws-loading.gif" alt="icone de carregamento" />
+            </div>
           )}
         >
           {renderRooms()}

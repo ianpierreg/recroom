@@ -12,10 +12,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
+from house.models import Room
 from interest.models import Interest, InterestType
 from interest.serializers import InterestSerializer
-from users.models import Profile, ProfileInterests
-from users.serializers import CreateUserSerializer
+from users.models import Profile, ProfileInterests, Valuation
+from users.serializers import CreateUserSerializer, ValuationSerializer
 
 import ipdb
 
@@ -87,6 +88,19 @@ def logout(request):
     token.delete()
     return Response(status=status.HTTP_200_OK)
 
+@csrf_exempt
+@api_view(["POST"])
+def evaluate(request):
+    # ipdb.set_trace()
+    token_header = request.META.get("HTTP_AUTHORIZATION")[7:][:-1]
+    token = Token.objects.get(key=token_header)
+    profile = Profile.objects.get(user_id=token.user_id)
+    room = Room.objects.get(id=request.data.get("room_id"))
+
+    valuation, created = Valuation.objects.update_or_create(room_id=room.id, profile_id=profile.id, defaults=request.data)
+
+    return Response({"valuation": 1})
+
 # @login_required
 # def update_user(request):
 #     profile_form = UpdateProfileForm(request.POST or None, instance=request.user.profile)
@@ -100,8 +114,19 @@ def logout(request):
 #     })
 #
 #
-# class UserListView(generics.ListCreateAPIView):
+# class get_valuations(generics.ListCreateAPIView):
 #     queryset = models.CustomUser.objects.all()
 #     serializer_class = serializers.CreateUserSerializer
 
 
+# @csrf_exempt
+@api_view(['GET'])
+def get_valuations(request):
+    token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
+    token = Token.objects.get(key=token_header)
+    profile = Profile.objects.get(user_id=token.user_id)
+
+    valuations = Valuation.objects.filter(profile=profile)
+    valuations_serialized = ValuationSerializer(valuations, many=True)
+
+    return Response({"valuations": valuations_serialized.data}, status=status.HTTP_200_OK)

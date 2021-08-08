@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import '../../../static/frontend/css/common.css';
 import CSRFToken from '../common/csrftoken';
 
-export default function FormLogin({ endpoint, clos, showQuestions,setToken, show }) {
+export default function FormLogin({ endpoint, close, showQuestions,setToken, show }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -45,14 +45,12 @@ export default function FormLogin({ endpoint, clos, showQuestions,setToken, show
       }
     };
     fetch(endpoint, conf).then(response => {
-      debugger
       if (response.status !== 200) {
         return null
       }
       return response.json()
     }).then(data => {
       if (data) {
-        debugger
         console.log(data, 'data')
         localStorage.setItem("user", data.user)
         setToken("Token " + data.token)
@@ -106,7 +104,7 @@ export default function FormLogin({ endpoint, clos, showQuestions,setToken, show
                     />
                   </div>
                 </div>
-                <CSRFToken csrf={getCookie('csrftoken')}/>
+                <CSRFToken csrf={getCookie('csrftoken')} />
                 <div className="control">
                   <button type="submit" className="button is-primary is-fullwidth is-medium">
                     Entrar

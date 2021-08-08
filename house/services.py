@@ -60,9 +60,9 @@ class CosineCalculator:
         similarity = 0
 
         for tenant_interests_boolean in tenants_interests_boolean:
-            amor = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
+            similariy_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
             # ipdb.set_trace()
-            similarity += amor
+            similarity += similariy_buffer
 
         tenants_num = len(tenants)
         if tenants_num == 0:

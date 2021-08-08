@@ -2,12 +2,15 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from users.models import Profile
+from users.models import Profile, Valuation
 from . import models
 
+class ValuationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Valuation
+        fields = '__all__'
 
 class CreateProfileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Profile
         fields = ('birthdate', 'group')

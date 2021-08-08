@@ -22,6 +22,8 @@ urlpatterns = [
     path('cadastrar/', views.create_user, name='create_user'),
     path('interesses/', views.get_save_interests, name='interests'),
     path('login/', views.login, name='login'),
+    path('evaluate/', views.evaluate, name='evaluate'),
+    path('valuations/', views.get_valuations, name='valuation'),
     path('logout/', views.logout, name='logout'),
 ]
 

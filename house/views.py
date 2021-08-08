@@ -49,9 +49,6 @@ def create_house(request):
 #     return Response({"rooms": serializers_room.data}, status=status.HTTP_200_OK)
 #
 
-
-
-
 # @csrf_exempt
 @api_view(['GET'])
 def get_rooms(request):
