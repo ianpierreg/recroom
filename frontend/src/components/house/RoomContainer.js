@@ -21,7 +21,7 @@ export default function RoomContainer({ room, medal, position }) {
         position={position}
         opened={valuationOpened}
         closeValuation={(valuation) => {
-          setCompoundRoom({ ...room, valuation})
+          if (valuation) setCompoundRoom({ ...room, valuation})
           setValuationOpened(false)
         }}
       />

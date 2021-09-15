@@ -1,14 +1,20 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import ReactStars from 'react-rating-stars-component'
 import CSRFToken from '../common/csrftoken'
 import Swal from 'sweetalert2'
+import { Tooltip } from '@trendmicro/react-tooltip'
+import '@trendmicro/react-tooltip/dist/react-tooltip.css'
 import '../../../static/frontend/css/common.css'
 
 export default function RoomValuation({ room, score, opened, closeValuation, position }) {
   const [stars, setStars] = useState()
   const [comment, setComment] = useState()
   const [error, setError] = useState('')
-  
+  const [tenantsChoices, setTenantChoices] = useState()
+  const scoreDesc = 'O score de afinidade é calculado baseado nas respostas' +
+  ' e interesses do seu perfil e dos perfis dos moradores da residência a qual esse quarto pertence.'
+  const valuationDesc = 'Por favor, nos ajude avaliando a recomendação'
+
     const getCookie = (cookieName) => {
       let cookieValue = document.cookie
       let cookieStart = cookieValue.indexOf(" " + cookieName + "=")
@@ -27,6 +33,167 @@ export default function RoomValuation({ room, score, opened, closeValuation, pos
       }
       return cookieValue
     }
+
+
+    console.log('room', room)
+    useEffect(() => {
+      let d = {}
+    if(room.description === 'quan') console.log('tenant_interests', room.tenants_interests)
+      room.tenants_interests.forEach((t) => {
+        Object.keys(t).forEach(e => {
+          if (d[e]) {
+
+            d[e].importanceTotal += t[e].importance
+          } else {
+
+            d[e] = {importanceTotal: t[e].importance, interestTotal: {}}
+          }
+
+
+          t[e].interests.forEach(f => {
+            if (d[e]['interestTotal'][f]) {
+              debugger
+              d[e]['interestTotal'][f] += 1
+            } else {
+              debugger
+              d[e]['interestTotal'][f] = 1
+            }
+          })
+        })
+      })
+
+
+      Object.values(d).forEach(ff => {
+        ff.interestTotal = Object.entries(ff.interestTotal)
+      })
+
+      d = {
+    "Estilo Musical": {
+        "importanceTotal": 5,
+        "interestTotal": [
+            [
+                "Pagode", 2
+            ],
+           [
+                "Rock", 2
+            ],
+           [
+                "Axé", 2
+            ]
+        ]
+    },
+    "Filmes e Séries": {
+        "importanceTotal": 4,
+        "interestTotal": [
+            [
+                "Comédia",
+                2
+            ],
+            [
+                "Ação",
+                1
+            ]
+        ]
+    },
+    "Passeios": {
+        "importanceTotal": 4,
+        "interestTotal": [
+            [
+                "Praia",
+                2
+            ],
+        ]
+    }
+}
+      if(room.description === 'quan') console.log('thats the d', d)
+      setTenantChoices(d)
+      debugger
+      let i = 0
+      let da = { }
+      while(Object.keys(d).length < 3 && i < Object.keys(d).length) {
+          let e = Object.keys(d)[i]
+          if(d[e].importanceTotal === 5) da[e] = d[e]
+          i++
+        }
+      i = 0
+      while(Object.keys(d).length < 3 && i < Object.keys(d).length) {
+          let e = Object.keys(d)[i]
+          if(d[e].importanceTotal === 4) da[e] = d[e]
+          i++
+        }
+      i = 0
+      while(Object.keys(d).length < 3 && i < Object.keys(d).length) {
+        let e = Object.keys(d)[i]
+        if(d[e].importanceTotal === 3) da[e] = d[e]
+        i++
+      }
+    if(room.description === 'quan') console.log('da', da)
+      let v = Object.keys(da).map(a => ({typeOfInterest: a, ...da[a]}))
+
+    v =  [
+    {
+        "importanceTotal": 2,
+        "typeOfInterest": "cinema",
+          "interestTotal": {
+            "forro": 2,
+            "funk": 3,
+            'outro': 1
+          }
+    },
+    {
+        "importanceTotal": 3,
+        "typeOfInterest": "passeio",
+          "interestTotal": {
+            "forro": 1,
+            "funk": 5,
+            'outro': 4
+          }
+    },
+    {
+        "typeOfInterest": "type",
+        "importanceTotal": 1,
+        "interestTotal": {
+            "fgfgf": 2,
+            "dfgfdg": 1,
+            "asa": 4,
+            "azul": 2,
+            "china": 3
+        }
+    },
+    {
+        "importanceTotal": 5,
+        "typeOfInterest": "vida",
+        "interestTotal": {
+            "tipo": 2
+        }
+    },
+    {
+        "typeOfInterest": "tipo",
+        "importanceTotal": 2,
+        "interestTotal": {
+            "tipo": 2
+        }
+    },
+    {
+        "importanceTotal": 4,
+        "typeOfInterest": "musica",
+        "interestTotal": {
+            "forro": 4,
+            "funk": 2
+        }
+    }
+]
+      v.sort((a, b) => a.importanceTotal - b.importanceTotal)
+
+    v.forEach(c => {
+      console.log('c', c)
+      c.interestTotal = Object.entries(c.interestTotal)
+    .sort(([,a],[,b]) => a-b)
+    .reduce((r, [k, v]) => ({ ...r, [k]: v }), {})
+    })
+
+      console.log('viva', v)
+    }, [])
 
 
     const handleSubmit = e => {
@@ -70,25 +237,115 @@ export default function RoomValuation({ room, score, opened, closeValuation, pos
       )
       }
     })
-  };
+  }
+
+console.log()
+const escolhidos = {}
+const be = [
+  {score: 12, typeOfInterest12: ['interesse1, interesse2'], typeOfInterest13: ['interesse21, interesse22'] },
+  {score: 11, typeOfInterest14: ['interesse1, interesse2'], typeOfInterest15: ['interesse21, interesse22'] },
+  {score: 15, typeOfInterest16: ['interesse151, interesse152'] },
+  {score: 13, typeOfInterest17: ['interesse131, interesse132'], typeOfInterest18: ['interesse231, interesse232'], typeOfInterest19: ['interesse231, interesse232'] }
+]
+const casa = be.sort((a, b) => a.score - b.score)
+while (Object.keys(casa).length > 0 && Object.keys(escolhidos).length < 3) {
+    const max = casa.pop()
+    delete max.score
+    Object.keys(max).forEach(key => {
+        if(Object.keys(escolhidos).length < 3) escolhidos[key] = max[key]
+    })
+
+}
+
+console.log('es', escolhidos)
+
+  const firstCategory = () => {
+    if (!tenantsChoices || !Object.keys(tenantsChoices)[0]) return null
+    const chosen = Object.keys(tenantsChoices)[0]
+    const { interestTotal } = tenantsChoices[chosen]
+    const length = interestTotal.length
+    if (length === 0) return null
+
+    return (
+      <p>
+        Nessa residência, a categoria de interesse com maior nível de importância, segundo os moradores atuais é {chosen},
+        e dentro dessa categoria, {length === 1 ? 'o interesse mais escolhido foi' : 'os interesses mais escolhidos foram'}
+        {interestTotal.map((interest, index) => {
+          if (index === 0) return ' ' + interest[0]
+          if (length - 1 === index) return ' e ' + interest[0]
+          return ', ' + interest[0]
+        })}
+      </p>
+    )
+  }
+
+  const secondCategory = () => {
+    if (!tenantsChoices || !Object.keys(tenantsChoices)[1]) return null
+    const chosen = Object.keys(tenantsChoices)[1]
+    const { interestTotal } = tenantsChoices[chosen]
+    const length = interestTotal.length
+    if (length === 0) return null
+
+    return (
+      <p>
+        Nessa residência, a categoria de interesse com segundo maior nível de importância para os moradores atuais é {chosen},
+        e dentro dessa categoria, {length === 1 ? 'o interesse mais escolhido foi' : 'os interesses mais escolhidos foram'}
+        {interestTotal.map((interest, index) => {
+          if (index === 0) return ' ' + interest[0]
+          if (length - 1 === index) return ' e ' + interest[0]
+          return ', ' + interest[0]
+        })}
+      </p>
+    )
+  }
+
+
+    const thirdCategory = () => {
+    if (!tenantsChoices || !Object.keys(tenantsChoices)[2]) return null
+    const chosen = Object.keys(tenantsChoices)[2]
+    const { interestTotal } = tenantsChoices[chosen]
+    const length = interestTotal.length
+    if (length === 0) return null
+
+    return (
+      <p>
+        Além dos interesses citados acima, os moradores da residência também mostram interesse na categoria {chosen},
+        e dentro dessa categoria, {length === 1 ? 'o interesse mais escolhido foi' : 'os interesses mais escolhidos foram'}
+        {interestTotal.map((interest, index) => {
+          if (index === 0) return ' ' + interest[0]
+          if (length - 1 === index) return ' e ' + interest[0]
+          return ', ' + interest[0]
+        })}
+      </p>
+    )
+  }
 
   return (
      <div className={opened ? "modal is-active" : "modal"}>
       <div className="modal-background" />
-      <div className="modal-card column is-mobile is-four-fifths">
+      <div className="modal-card column is-mobile is-three-fifths">
         <header className="modal-card-head">
-          <span className="modal-card-title is-size-5-mobile">Avaliar recomendação</span>
-          <button className="delete" aria-label="close" onClick={closeValuation} />
+          <span className="modal-card-title is-size-5-mobile">
+            Avaliar recomendação do quarto {room.description}
+          </span>
+          <button className="delete" aria-label="close" onClick={() => closeValuation()} />
         </header>
         <section className="modal-card-body valuation">
           <div className="first-column">
             <div className="score">
             <div className="score-number">{score}%</div>
-            <div className="score-description">de score de afinidade (izinho)</div>
+            <div className="score-description">
+              de score de afinidade
+             <Tooltip content={scoreDesc}>
+                <button>i</button>
+              </Tooltip>
+            </div>
           </div>
             <form onSubmit={handleSubmit}>
               <div className="stars control">
-                <label>Avalie a recomendação (izinho):</label>
+                <label>
+                  Avalie a recomendação:
+                </label>
                 <ReactStars
                   count={5}
                   onChange={(value) => setStars(value)}
@@ -101,7 +358,7 @@ export default function RoomValuation({ room, score, opened, closeValuation, pos
                 <textarea 
                   name="comments" 
                   id="comments" 
-                  rows="7" 
+                  rows="4"
                   onChange={e => setComment(e.target.value)}
                 />
               </div>
@@ -116,15 +373,9 @@ export default function RoomValuation({ room, score, opened, closeValuation, pos
           </div>
           <div className="second-column">
             <div className="house-info">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in orci sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut varius odio ac nisi elementum suscipit. Duis tristique iaculis condimentum. Fusce non purus nibh. Nullam placerat pulvinar leo, non interdum ante gravida eu. Vestibulum sed est euismod, sodales velit ultricies, hendrerit ligula. Pellentesque pharetra fermentum nisl sed pharetra. Phasellus mattis ut diam eget suscipit. Donec non ante vel tortor aliquet auctor. Curabitur semper efficitur leo sit amet consectetur. Donec volutpat mi quis tempus placerat. Fusce ornare fermentum dui, eget malesuada neque condimentum tincidunt. Ut ac porta mi. Etiam eget lorem neque.
-
-Duis dictum imperdiet vehicula. Donec vulputate velit ac diam placerat venenatis. Sed iaculis nec neque sed tincidunt. Integer sed ante eget lectus tincidunt blandit consequat porttitor enim. Praesent bibendum, arcu non pellentesque gravida, lorem magna molestie magna, quis sollicitudin tortor metus at leo. Phasellus quis condimentum velit. Phasellus auctor quis tortor at pulvinar. In accumsan ex et dolor finibus volutpat. Suspendisse ut ante diam. Integer tempus, ex vel varius hendrerit, lorem lectus dapibus odio, quis aliquet sem lectus porttitor nisl. Donec vel cursus urna. Mauris auctor dapibus sollicitudin. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac sem nunc.
-
-Suspendisse eleifend odio ullamcorper mi gravida, accumsan euismod diam luctus. Nulla feugiat cursus elit, ac pharetra justo ornare sit amet. Praesent vel lectus vel odio placerat ornare. Duis non iaculis sem. Duis ultrices molestie mauris eget consectetur. Praesent nulla lectus, feugiat eu arcu sed, venenatis iaculis orci. Suspendisse ligula diam, varius ac lorem quis, scelerisque convallis tortor. Fusce ac iaculis odio, a malesuada neque. Cras posuere dignissim dolor, eu gravida nisi eleifend in. Ut id rhoncus sapien, quis ultricies enim. Aenean efficitur odio sed sem mattis, eu lacinia diam vestibulum. Curabitur efficitur semper dui. Duis facilisis dolor sed tortor condimentum auctor vel eu nisl. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean laoreet, orci eget elementum fermentum, elit leo sodales orci, tristique efficitur justo sem molestie purus. Donec accumsan viverra nibh at tristique.
-
-Aenean eu turpis sed leo tristique pretium. Aliquam tempor auctor nibh non pulvinar. Aliquam ut finibus orci, sed rutrum mi. Morbi ac tortor dolor. Curabitur auctor, magna vitae dignissim luctus, tellus massa venenatis leo, gravida faucibus diam eros a justo. Praesent id mi dignissim neque porttitor bibendum. Sed a vestibulum purus. Donec semper diam ligula, ac vehicula velit tincidunt imperdiet. Morbi ac ante nec tellus commodo condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent faucibus lorem eu augue ullamcorper, eu cursus orci suscipit. Quisque rutrum ante non elit ornare volutpat.
-
-Aliquam accumsan mi ac mi mollis vulputate. Cras mollis turpis dolor, non venenatis arcu ullamcorper at. Fusce ultricies ultrices ante vitae blandit. Nullam euismod metus ut libero ornare commodo. Quisque quis est elit. Nulla a elementum est. Quisque lobortis nunc consectetur dui sodales porttitor. Phasellus hendrerit purus turpis, a accumsan eros sodales ut. Nam hendrerit arcu molestie, accumsan velit sit amet, consectetur orci. Morbi lacinia semper turpis, id fringilla ligula iaculis at. Maecenas in justo sit amet ante luctus pretium tempus et ipsum. Donec quis accumsan augue. Nunc ornare dapibus elit, quis maximus justo gravida at.
+              {firstCategory()}
+              {secondCategory()}
+              {thirdCategory()}
             </div>
           </div>
         </section>

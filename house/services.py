@@ -18,7 +18,7 @@ class CosineCalculator:
         similarity_by_house = []
 
         for house in houses:
-            house.value = self.calculate_similarity_house_tenant(house, future_tenant, profile)
+            (house.value, house.tenants_interests) = self.calculate_similarity_house_tenant(house, future_tenant, profile)
             similarity_by_house.append(house)
 
         return sorted(similarity_by_house, key=lambda x: x.value, reverse=True)
@@ -53,22 +53,22 @@ class CosineCalculator:
                                                                      profile)
             for i, tenant_interests in enumerate(tenants_interests):
                 # ipdb.set_trace()
-                tenants_interests_boolean[i] = tenants_interests_boolean[i] + self.get_boolean_list(tenant_interests.get(interest_type.name),
-                                                                      interest_type.name,
-                                                                      profile)
+                tenants_interests_boolean[i] = tenants_interests_boolean[i] + self.get_boolean_list(
+                    tenant_interests.get(interest_type.name),
+                    interest_type.name,
+                    profile)
 
         similarity = 0
 
         for tenant_interests_boolean in tenants_interests_boolean:
-            similariy_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
-            # ipdb.set_trace()
-            similarity += similariy_buffer
+            similarity_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
+            similarity += similarity_buffer
 
-        tenants_num = len(tenants)
-        if tenants_num == 0:
-            return tenants_num
+        # ipdb.set_trace()
+        if similarity == 0:
+            return (similarity, tenants_interests)
         else:
-            return similarity / len(tenants)
+            return (similarity / len(tenants), tenants_interests)
 
         # for key_future, interest_future_tenant in interests_future_tenant.items():
         #     for tenant in tenants:
@@ -95,6 +95,7 @@ class CosineCalculator:
         #
         #         comparated_value = 0
         # return self.attributes_media(values_for_attributes)
+
 
     def get_user_interests(self, tenant):
         interests_tenant = {}

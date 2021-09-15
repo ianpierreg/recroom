@@ -61,13 +61,18 @@ def get_rooms(request):
     future_tenant = Profile.objects.get(user_id=token.user_id)
     houses = cosine.calculate_similarity_all_houses(houses, future_tenant, profile)
     rooms = []
+    # ipdb.set_trace()
+
     for house in houses:
         rooms_buffer = Room.objects.filter(house=house, tenant__isnull=True).all()
         for room_buffer in rooms_buffer:
             room_serializer = serializers.RoomSerializer(room_buffer)
             # ipdb.set_trace()
             # if room_serializer.tenant is not None: continue
-            new_room = {"value": house.value}
+            new_room = {
+                "value": house.value,
+                "tenants_interests": house.tenants_interests,
+            }
             new_room.update(room_serializer.data)
             rooms.append(new_room)
 

@@ -5,18 +5,16 @@ import FormLogin from "../user/FormLogin";
 import FormHouse from "../house/FormHouse"
 // import useLocalStorage from "use-local-storage"
 import InterestsContainer from "../user/InterestsContainer";
-
-
+import useWindowSize from "../home/WindowSize";
+import { GiHamburgerMenu } from 'react-icons/gi';
+import Burger from 'react-css-burger';
 
 export default function TopMenu({ token, setToken }) {
   const [showRegister, setShowRegister] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
   const [showQuestions, setShowQuestions] = useState(false)
-
-
-  useEffect(() => {
-    console.log('token', token)
-  }, [token])
+  const [isOpen, setIsOpen] = useState(false)
+  const size = useWindowSize()
 
   const showRegisterModal = () => {
     setShowLogin(false)
@@ -43,29 +41,29 @@ export default function TopMenu({ token, setToken }) {
   const closeQuestionsModal = () => { setShowQuestions(false) }
 
   const renderModal = () => {
-     return (
-       <React.Fragment>
-         <FormRegister
-           endpoint="/cadastrar/"
-           close={closeRegisterModal}
-           show={showRegister}
-           showQuestions={showQuestionsModal}
-           setToken={setToken}
-         />
-         <FormLogin
-           endpoint="/login/"
-           close={closeLoginModal}
-           show={showLogin}
-           showQuestions={showQuestionsModal}
-           setToken={setToken}
-         />
-         <InterestsContainer
-           endpoint="/interesses/"
-           close={closeQuestionsModal}
-           show={showQuestions}
-         />
-       </React.Fragment>
-     )
+   return (
+     <React.Fragment>
+       <FormRegister
+         endpoint="/cadastrar/"
+         close={closeRegisterModal}
+         show={showRegister}
+         showQuestions={showQuestionsModal}
+         setToken={setToken}
+       />
+       <FormLogin
+         endpoint="/login/"
+         close={closeLoginModal}
+         show={showLogin}
+         showQuestions={showQuestionsModal}
+         setToken={setToken}
+       />
+       <InterestsContainer
+         endpoint="/interesses/"
+         close={closeQuestionsModal}
+         show={showQuestions}
+       />
+     </React.Fragment>
+   )
   }
 
   const logout = () => {
@@ -87,32 +85,53 @@ export default function TopMenu({ token, setToken }) {
   }
 
   const renderLoginOrLogoutBtn = () => {
-      if(!token) {
-        return (
-          <div className="inherit-div">
-            <span className="level-item" onClick={showRegisterModal}><a>Cadastrar</a></span>
-            <span className="level-item" onClick={showLoginModal}><a className="button is-success">Entrar</a></span>
-          </div>
-        )
-      } else {
-        return (
-          <React.Fragment>
-            <span id="questions" className="level-item" onClick={showQuestionsModal}>
-              <a>Responder perguntas</a>
-            </span>
-            <span className="level-item" onClick={logout}>
-              <a className="button is-danger">Sair</a>
-            </span>
-          </React.Fragment>
-        )
-      }
+    if(!token) {
+      return (
+        <div className="inherit-div">
+          <span className="level-item" onClick={showRegisterModal}><a>Cadastrar</a></span>
+          <span className="level-item" onClick={showLoginModal}><a className="button is-success">Entrar</a></span>
+        </div>
+      )
+    } else {
+      return (
+        <React.Fragment>
+          <span id="questions" className="level-item" onClick={showQuestionsModal}>
+            <a>Responder perguntas</a>
+          </span>
+          <span className="level-item" onClick={logout}>
+            <a className="button is-danger">Sair</a>
+          </span>
+        </React.Fragment>
+      )
+    }
   }
 
-  return (
+  const renderHamburger = () => {
+    return (
+      <div className="hamburger-menu">
+       <Burger
+          onClick={() => setIsOpen(!isOpen)}
+          active={isOpen}
+          burger="slider"
+          color="white"
+        />
+      </div>
+    )
+  }
+
+  const renderHamburgerMenu = () => {
+    return (
+      <div className={isOpen ? "hamburger-menu-list is-open" : "hamburger-menu-list"}>
+        { renderLoginOrLogoutBtn()}
+      </div>
+    )
+  }
+
+  return size && (
     <section className="top">
       <div className="level-right">
-          {/*<span className="level-item"><strong>Moradias</strong></span>*/}
-          {renderLoginOrLogoutBtn()}
+        {renderHamburgerMenu()}
+        {size.width <= 780 ? renderHamburger() : renderLoginOrLogoutBtn()}
       </div>
       {renderModal()}
     </section>

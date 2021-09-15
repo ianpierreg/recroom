@@ -1,10 +1,14 @@
-import React, { useState } from "react"
-import { render } from "react-dom"
+import React from 'react'
+import { Tooltip } from '@trendmicro/react-tooltip'
+import '@trendmicro/react-tooltip/dist/react-tooltip.css'
 import '../../../static/frontend/css/common.css'
 
 export default function RoomItem({ room, medal, score, openValuation }) {
+  const scoreDesc = 'O score de afinidade é calculado baseado nas respostas' +
+    ' e interesses do seu perfil dos moradores da residência a qual esse quarto pertence.'
+
   return (
-    <div className="column flip-card-front">
+    <div className="column flip-houcard-front">
       <div className="card">
         <div className="card-image">
           <figure className="image is-4by3">
@@ -23,9 +27,12 @@ export default function RoomItem({ room, medal, score, openValuation }) {
             </div>
             <div className="subtitle is-6">R$ {room.price}</div>
             <div className="score-evaluate">
-              <span>
-                <strong>{score}%</strong> de score de afinidade (izinho)
-              </span>
+              <div className="izinho">
+                <strong className="margin-right-3">{score}% </strong> de score de afinidade
+                <Tooltip content={scoreDesc}>
+                  <button>i</button>
+                </Tooltip>
+              </div>
               <button
                 type="submit"
                 className="button is-primary is-medium"
@@ -34,9 +41,7 @@ export default function RoomItem({ room, medal, score, openValuation }) {
               >
                 {!room.valuation ? 'Avaliar' : 'Avaliado'}
               </button>
-
             </div>
-
             <br />
           </div>
         </div>
