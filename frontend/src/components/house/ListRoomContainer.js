@@ -10,6 +10,7 @@ export default function ListRoomContainer({ endpoint, token }) {
   const [hasMore, setHasMore] = useState(true)
   const [showButton, setShowButton] = useState(false)
   const [listCount, setListCount] = useState(10)
+  const [msg, setMsg] = useState()
   const ref = useRef(null)
   const scrollTo = () => ref.current.scrollIntoView({
     behavior: "smooth",
@@ -74,9 +75,15 @@ export default function ListRoomContainer({ endpoint, token }) {
         return response.json()
       })
       .then(res => {
-        if (!res || !res.rooms) return
-        console.log('rooms', res)
-        setData(res)
+        console.log('res', res)
+        if(!res) return
+        if(res.msg) {
+          console.log('msg', res.msg)
+          setMsg(res.msg)
+        } else if (res.rooms) {
+          setData(res)
+          setMsg()
+        }
       })
   }, [token])
 
@@ -116,22 +123,29 @@ export default function ListRoomContainer({ endpoint, token }) {
     }
   }
 
+  useEffect(() => {
+    console.log('set msg', msg)
+  }, [msg])
+
+
   return (
     <section className="section" ref={ref}>
       <h2 className="list-title">Ranking de quartos</h2>
       <div className="container">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={nextPage}
-          hasMore={hasMore}
-          loader={(
-            <div className="loader-gif" key={0}>
-              <img src="/media/ux-laws-loading.gif" alt="icone de carregamento" />
-            </div>
-          )}
-        >
-          {renderRooms()}
-        </InfiniteScroll>
+        {msg ? <h3 className="message-answer-question">{msg}</h3> : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={nextPage}
+            hasMore={hasMore}
+            loader={(
+              <div className="loader-gif" key={0}>
+                <img src="/media/ux-laws-loading.gif" alt="icone de carregamento" />
+              </div>
+            )}
+          >
+            {renderRooms()}
+          </InfiniteScroll>
+        )}
       </div>
        {showButton && (
           <div className="go-top-wrapper">

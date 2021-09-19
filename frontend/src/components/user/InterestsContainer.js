@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import '../../../static/frontend/css/common.css';
 import NumberFormat from 'react-number-format'
 import InterestOptionContainer from "./InterestOptionContainer";
+import { Tooltip } from "@trendmicro/react-tooltip";
+import '@trendmicro/react-tooltip/dist/react-tooltip.css'
 
 export default function InterestsContainer({ endpoint, show, close }) {
   const [items, setItems] = useState([])
@@ -129,6 +131,8 @@ export default function InterestsContainer({ endpoint, show, close }) {
     location.reload()
   }
 
+  const importanceDesc = 'O nível de importância é utilizado para aplicar peso no cálculo de similaridade, para determinados interesses do usuário.' +
+    'Quão importante é para você esse tópico? Quanto maior o valor, maior impacto desse tipo de interesse no cálculo final'
   return (
     <div className={show ? "modal is-active" : "modal"}>
       <div className="modal-background" />
@@ -136,7 +140,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
         <header className="modal-card-head">
           <div className="interest-title-wrapper">
             <h2 className="modal-card-title is-size-5-mobile">{type}</h2>
-            <h3>{description}</h3>
+            {description && <h3>{description}</h3>}
           </div>
           <button className="delete" aria-label="close" onClick={closeModal} />
         </header>
@@ -150,8 +154,13 @@ export default function InterestsContainer({ endpoint, show, close }) {
                   {interests.length > 0 ? (
                     <React.Fragment>
                       <div className="importance">
-                        <label htmlFor="quantity">Importância deste tópico para você (de 0 a 5) i:</label>
-                        <div className="tenant-landlord field-body">
+                        <label htmlFor="quantity">
+                          Importância deste tópico para você
+                          <Tooltip content={importanceDesc}>
+                            <button>i</button>
+                          </Tooltip>
+                        :</label>
+                        <div className="tenant-landlord importance field-body">
                           <div className="field">
                             <input 
                               id="0" 

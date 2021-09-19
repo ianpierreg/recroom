@@ -9706,6 +9706,11 @@ label.panel-block:hover {
   margin-right: 3px;
 }
 
+.message-answer-question {
+  text-align: center;
+  padding: 0 20px;
+}
+
 @media only screen and (max-width: 780px) {
   .section {
     padding: 28px 0 0;
@@ -9721,11 +9726,14 @@ label.panel-block:hover {
 
   .izinho {
     margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
   }
 
-  input {
+  .field-body .field {
     width: 100% !important;
+  }
+
+  .tenant-landlord.importance {
+    display: flex;
+    flex-direction: column;
   }
 }

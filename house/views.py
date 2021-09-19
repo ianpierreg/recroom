@@ -52,6 +52,8 @@ def create_house(request):
 # @csrf_exempt
 @api_view(['GET'])
 def get_rooms(request):
+    # ipdb.set_trace()
+
     token_header = request.META.get("HTTP_AUTHORIZATION")[6:]
     token = Token.objects.get(key=token_header)
     profile = Profile.objects.get(user_id=token.user_id)
@@ -59,6 +61,9 @@ def get_rooms(request):
     cosine = CosineCalculator()
     houses = House.objects.all()
     future_tenant = Profile.objects.get(user_id=token.user_id)
+    if future_tenant.answered == 0:
+        return Response({"msg": 'Por gentileza, complete seu perfil respondendo as perguntas para ter acesso ao ranking de quartos.'}, status=status.HTTP_200_OK)
+
     houses = cosine.calculate_similarity_all_houses(houses, future_tenant, profile)
     rooms = []
     # ipdb.set_trace()

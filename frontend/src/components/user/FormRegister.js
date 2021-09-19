@@ -245,7 +245,7 @@ class FormRegister extends Component {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <span className="modal-card-title is-size-5-mobile">Cadastre-se gratuitamente</span>
+            <span className="modal-card-title is-size-5-mobile">Cadastre-se</span>
             <button className="delete" aria-label="close" onClick={this.closeModal.bind(this)}></button>
           </header>
           <section className="modal-card-body">
@@ -339,7 +339,7 @@ class FormRegister extends Component {
                       {this.renderError("password2")}
                     </div>
                   </div>
-                  <div className="tenant-landlord field-body">
+                  <div className="tenant-landlord login field-body">
                     <div id="tenant-wrapper" className="field">
                       <input id="tenant" className="is-checkradio"
                              type="radio" name="group" value="tenant" defaultChecked="defaultChecked"

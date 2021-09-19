@@ -127,11 +127,11 @@ export default function TopMenu({ token, setToken }) {
     )
   }
 
-  return size && (
+  return !size ? null : (
     <section className="top">
       <div className="level-right">
         {renderHamburgerMenu()}
-        {size.width <= 780 ? renderHamburger() : renderLoginOrLogoutBtn()}
+        {size && size.width && size.width <= 780 ? renderHamburger() : renderLoginOrLogoutBtn()}
       </div>
       {renderModal()}
     </section>
