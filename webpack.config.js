@@ -1,6 +1,6 @@
 var debug = process.env.NODE_ENV !== "production"; // detalhe aqui
 var webpack = require('webpack');
-const Uglify = require("uglifyjs-webpack-plugin");
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
@@ -32,6 +32,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
+    new UglifyJSPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,   // enable source maps to map errors (stack traces) to modules
       minimize: true,
