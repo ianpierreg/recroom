@@ -33,13 +33,13 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new UglifyJSPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,   // enable source maps to map errors (stack traces) to modules
-      minimize: true,
-      output: {
-        comments: false, // remove all comments
-      },
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   sourceMap: true,   // enable source maps to map errors (stack traces) to modules
+    //   minimize: true,
+    //   output: {
+    //     comments: false, // remove all comments
+    //   },
+    // }),
     new CompressionPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',
