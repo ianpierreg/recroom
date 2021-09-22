@@ -152,11 +152,13 @@ class CosineCalculator:
         for interest_by_type in interests_by_type:
             # found = False
             value = 0
-            for user_interest in user_interests['interests']:
-                if interest_by_type.name == user_interest:
-                    # found = True
-                    value = user_interests['importance']
-                    break
+
+            if user_interests is not None:
+                for user_interest in user_interests['interests']:
+                    if interest_by_type.name == user_interest:
+                        # found = True
+                        value = user_interests['importance']
+                        break
             # if found:
             attributes_x_type.append(value)
             # else:

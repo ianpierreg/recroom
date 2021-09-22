@@ -9640,7 +9640,7 @@ label.panel-block:hover {
   line-height: 100%;
 }
 
-.izinho button, .score-description button, .stars label button {
+.izinho button, .score-description button, .importance-interest button {
   line-height: 100%;
   padding: 0;
   height: 18px;

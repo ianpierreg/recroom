@@ -29,6 +29,10 @@ export default function RoomValuation({ room, score, opened, closeValuation, pos
     ref2.current.scrollTop = 0
   }, [ref2, opened, showValuationForm])
 
+  useEffect(() => {
+    setShowValuationForm(false)
+  }, [opened])
+
   const getCookie = (cookieName) => {
     let cookieValue = document.cookie
     let cookieStart = cookieValue.indexOf(" " + cookieName + "=")

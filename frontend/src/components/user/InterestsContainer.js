@@ -154,12 +154,12 @@ export default function InterestsContainer({ endpoint, show, close }) {
                   {interests.length > 0 ? (
                     <React.Fragment>
                       <div className="importance">
-                        <label htmlFor="quantity">
+                        <label htmlFor="importance" className='importance-interest'>
                           Importância deste tópico para você
                           <Tooltip content={importanceDesc}>
                             <button>i</button>
                           </Tooltip>
-                        :</label>
+                        : </label>
                         <div className="tenant-landlord importance field-body">
                           <div className="field">
                             <input 
