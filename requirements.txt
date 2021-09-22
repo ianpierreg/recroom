@@ -1,6 +1,6 @@
 numpy==1.20.1
 whitenoise==5.2.0
-Django==3.1.7
+Django==3.1.13
 ipdb==0.13.7
 dj_database_url==0.5.0
 djangorestframework==3.12.4
