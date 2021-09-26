@@ -38,9 +38,7 @@
 }
 
 .tenant-landlord .field {
-    border: 0.2vh solid #dbdbdb;
-    border-radius: 0.5vh;
-    padding: 5px;
+
 }
 
 .background-checked {
@@ -254,4 +252,13 @@ h2 button {
 
 h2 button:hover {
     color: #00C4A7 !important;
+}
+
+.remove-padding-margin {
+    width: calc(50% - 10px);
+    max-width: 100%;
+    padding: 0;
+    border: 0.2vh solid #dbdbdb;
+    border-radius: 0.5vh;
+    margin: 5px;
 }

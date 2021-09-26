@@ -241,6 +241,7 @@
     font-size: 1rem;
     padding-left: 2rem;
     line-height: 130%;
+    margin: 0;
 }
 
 .is-checkradio[type=checkbox]+label::before,
