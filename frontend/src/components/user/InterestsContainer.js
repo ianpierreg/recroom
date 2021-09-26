@@ -95,7 +95,8 @@ export default function InterestsContainer({ endpoint, show, close }) {
         'Authorization': localStorage.getItem("token")
       }
     }
-    let _this = this
+
+    debugger
     if (interests.length > 0 && items > 0 && importance === undefined) {
       setImportanceBlank(true)
       return
@@ -120,6 +121,8 @@ export default function InterestsContainer({ endpoint, show, close }) {
       } else {
         setInterests([])
       }
+
+      setImportance(undefined)
     }).finally(() => {
       setLoading(false)
       setItems([])
