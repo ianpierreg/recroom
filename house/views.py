@@ -62,7 +62,7 @@ def get_rooms(request):
     houses = House.objects.all()
     future_tenant = Profile.objects.get(user_id=token.user_id)
     if future_tenant.answered == 0:
-        return Response({"msg": 'Por gentileza, complete seu perfil respondendo as perguntas para ter acesso ao ranking de quartos.'}, status=status.HTTP_200_OK)
+        return Response({"msg": 'Por gentileza, complete seu perfil para ter acesso ao ranking de quartos.'}, status=status.HTTP_200_OK)
 
     houses = cosine.calculate_similarity_all_houses(houses, future_tenant, profile)
     rooms = []

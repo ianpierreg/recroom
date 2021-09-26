@@ -96,7 +96,7 @@ export default function TopMenu({ token, setToken }) {
       return (
         <React.Fragment>
           <span id="questions" className="level-item" onClick={showQuestionsModal}>
-            <a>Responder perguntas</a>
+            <a>Completar Perfil</a>
           </span>
           <span className="level-item" onClick={logout}>
             <a className="button is-danger">Sair</a>

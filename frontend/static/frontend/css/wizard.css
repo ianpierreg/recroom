@@ -5792,6 +5792,10 @@ a.dropdown-item.is-active {
       flex-shrink: 0;
   font-size: 1.2rem;
   line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
 }
 
 .modal-card-foot {

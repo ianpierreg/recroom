@@ -47,35 +47,31 @@ export default function InterestsContainer({ endpoint, show, close }) {
 
       return arrayOfColumns.map((column) => column)
     } else {
-      return <div className="no-new-questions">
-        Nenhuma pergunta disponível no momento!
-      </div>
+      if (type !== '') setType('')
+      if (description) setDescription(undefined)
+
+      return (
+        <div className="no-new-questions">
+          Perfil completo. Confira a lista de quartos selecionados!
+        </div>
+      )
     }
 
-  }
-
-  const removeItem = (arr) => {
-    let what, a = arguments, L = a.length, ax
-    while (L > 1 && arr.length) {
-      what = a[--L]
-      while ((ax= arr.indexOf(what)) !== -1) {
-        arr.splice(ax, 1)
-      }
-    }
-    return arr
   }
 
   const handleChange = e => {
-    let itemsCopy = [...items];
+    debugger
+    let itemsCopy = [...items]
     let checkbutton =  document.getElementById(e.target.id)
-    let parent = checkbutton.parentElement;
-    if(!checkbutton.checked){
-      removeItem(itemsCopy, e.target.value)
+    let parent = checkbutton.parentElement
+    if(!checkbutton.checked) {
+      itemsCopy = itemsCopy.filter(item => item != e.target.value)
       parent.classList.remove("background-checked")
-    } else  {
+    } else {
       itemsCopy.push(e.target.value)
       parent.classList.add("background-checked")
     }
+
     setItems(itemsCopy)
   }
 
@@ -86,7 +82,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
 
   const callWebservice = () => {
 
-    const conf = {
+    let conf = {
       method: "post",
       body: JSON.stringify({ items, importance }),
       headers: {
@@ -97,9 +93,12 @@ export default function InterestsContainer({ endpoint, show, close }) {
     }
 
     debugger
-    if (interests.length > 0 && items > 0 && importance === undefined) {
+    if (interests.length > 0 && items.length > 0 && importance === undefined) {
       setImportanceBlank(true)
       return
+    } else if (items.length === 0 && importance !== undefined) {
+      const allItems = interests.map(i => i.id)
+      conf = { ...conf, body: JSON.stringify({ items: allItems, importance: 0 }) }
     }
 
     setImportanceBlank(false)
@@ -135,7 +134,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
   }
 
   const importanceDesc = 'O nível de importância é utilizado para aplicar peso no cálculo de similaridade, para determinados interesses do usuário.' +
-    'Quão importante é para você esse tópico? Quanto maior o valor, maior impacto desse tipo de interesse no cálculo final'
+    'Quão importante é para você esse tópico? Quanto maior o valor, maior impacto desse tipo de interesse no cálculo final.'
   return (
     <div className={show ? "modal is-active" : "modal"}>
       <div className="modal-background" />
@@ -156,7 +155,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
         <section className="modal-card-body">
           <div className="columns is-centered">
             <div className="column is-10">
-              {loading ? (<h3>Carregando perguntas ...</h3>) : (
+              {loading ? (<h3>Carregando interesses ...</h3>) : (
                 <form onSubmit={handleSubmit}>
                 {renderOptions()}
                 <div className="control">
@@ -245,7 +244,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
                     </React.Fragment>
                   ) : (
                     <button type="button" className="button is-primary is-fullwidth is-medium" onClick={closeModal}>
-                      Ok, eu volto depois!
+                      Ok
                     </button>
                   )}
                 </div>
