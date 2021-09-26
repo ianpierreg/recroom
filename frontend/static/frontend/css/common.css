@@ -241,3 +241,13 @@
 .tm-tooltip {
   z-index: 9999999999 !important;
 }
+
+h2 button {
+    color: #00C4A7 !important;
+    border-color: #00C4A7 !important;
+    padding: 10px !important;
+    width: auto;
+    height: auto;
+    line-height: 100%;
+    margin-left: 20px;
+}

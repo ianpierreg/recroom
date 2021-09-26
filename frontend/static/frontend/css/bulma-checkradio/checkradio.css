@@ -239,7 +239,8 @@
 
 .is-checkradio[type=checkbox]+label {
     font-size: 1rem;
-    padding-left: 2rem
+    padding-left: 2rem;
+    line-height: 130%;
 }
 
 .is-checkradio[type=checkbox]+label::before,

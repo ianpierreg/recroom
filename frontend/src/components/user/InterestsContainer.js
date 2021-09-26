@@ -142,8 +142,14 @@ export default function InterestsContainer({ endpoint, show, close }) {
       <div className="modal-card">
         <header className="modal-card-head">
           <div className="interest-title-wrapper">
-            <h2 className="modal-card-title is-size-5-mobile">{type}</h2>
-            {description && <h3>{description}</h3>}
+            <h2 className="modal-card-title is-size-5-mobile">
+              {type}
+               {description && (
+                <Tooltip content={description}>
+                  <button>i</button>
+                </Tooltip>
+              )}
+            </h2>
           </div>
           <button className="delete" aria-label="close" onClick={closeModal} />
         </header>
