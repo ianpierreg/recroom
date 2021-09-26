@@ -81,13 +81,9 @@
   }
 
   .modal-card {
-    max-height: 100vh !important;
+    max-height: 100% !important;
     margin: 0;
     padding: 0;
-  }
-
-  .modal-card-body {
-    /*height: 100vh !important;*/
   }
 
   .modal-card-title {

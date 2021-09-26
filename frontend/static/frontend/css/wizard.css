@@ -9545,7 +9545,7 @@ label.panel-block:hover {
 
 
 .container {
-  width: min(80%, 750px);
+  width: 75%;
 }
 
 .list-title {
