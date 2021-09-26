@@ -5768,6 +5768,7 @@ a.dropdown-item.is-active {
 .modal-card-head {
   display: flex;
   justify-content: space-between;
+  align-items: start;
   border-bottom: 1px solid #dbdbdb;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -5794,7 +5795,7 @@ a.dropdown-item.is-active {
   line-height: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   margin-bottom: 0;
 }
 

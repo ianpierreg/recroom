@@ -86,7 +86,7 @@
   }
 
   .modal-card-title {
-    width: 80% !important;
+    margin-right: 20px;
   }
 
   .evaluate {
@@ -247,7 +247,7 @@ h2 button {
     width: auto;
     height: auto;
     line-height: 100%;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 h2 button:hover {

@@ -247,7 +247,9 @@
 .is-checkradio[type=checkbox]+label::before,
 .is-checkradio[type=checkbox]+label:before {
     width: 1.5rem;
-    height: 1.5rem
+    height: 1.5rem;
+    top: 5px;
+    margin-left: 0.3rem;
 }
 
 .is-checkradio[type=checkbox]+label::after,
