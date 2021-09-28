@@ -240,7 +240,7 @@
 .is-checkradio[type=checkbox]+label {
     font-size: 1rem;
     padding-left: 2rem;
-    line-height: 130%;
+    line-height: 200%;
     margin: 0;
 }
 
@@ -254,10 +254,11 @@
 
 .is-checkradio[type=checkbox]+label::after,
 .is-checkradio[type=checkbox]+label:after {
-    width: .375rem;
-    height: .6rem;
-    top: .405rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    top: 5px;
     left: .6rem
+
 }
 
 .is-checkradio[type=checkbox].is-block+label::after,

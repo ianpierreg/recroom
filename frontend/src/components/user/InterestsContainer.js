@@ -63,9 +63,9 @@ export default function InterestsContainer({ endpoint, show, close }) {
     debugger
     let itemsCopy = [...items]
     let checkbutton =  document.getElementById(e.target.id)
-    let parent = checkbutton.parentElement
+    let parent = checkbutton.parentElement.parentElement
     if(!checkbutton.checked) {
-      itemsCopy = itemsCopy.filter(item => item != e.target.value)
+      itemsCopy = itemsCopy.filter(item => item !== e.target.value)
       parent.classList.remove("background-checked")
     } else {
       itemsCopy.push(e.target.value)

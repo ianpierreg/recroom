@@ -5778,6 +5778,7 @@ a.dropdown-item.is-active {
 .interest-title-wrapper {
   display: flex;
   flex-direction: column;
+  width: 90%;
 }
 
 .interest-title-wrapper h3 {
@@ -5794,9 +5795,9 @@ a.dropdown-item.is-active {
   font-size: 1.2rem;
   line-height: 1;
   display: flex;
-  justify-content: center;
-  align-items: start;
+  align-items: center;
   margin-bottom: 0;
+  width: 100%;
 }
 
 .modal-card-foot {
