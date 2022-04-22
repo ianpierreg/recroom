@@ -5629,7 +5629,7 @@ a.dropdown-item.is-active {
   max-height: calc(100vh - 160px);
   overflow: auto;
   position: relative;
-  width: 100%;
+  width: 94%;
 }
 
 @media screen and (min-width: 769px), print {
@@ -5786,18 +5786,17 @@ a.dropdown-item.is-active {
 }
 
 .modal-card-title {
-   color: #00C4A7;
+  color: #00C4A7;
   -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
   -ms-flex-negative: 0;
-      flex-shrink: 0;
+  flex-shrink: 0;
   font-size: 1.2rem;
   line-height: 1;
   display: flex;
   align-items: center;
   margin-bottom: 0;
-  width: 100%;
 }
 
 .modal-card-foot {

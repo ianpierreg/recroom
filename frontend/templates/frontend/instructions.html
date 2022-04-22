@@ -1,0 +1,14 @@
+{% extends './common/base.html'%}
+
+
+Add something here
+{% block scripts %}
+{% load static %}
+<script src="{% static "frontend/build/instructions.js" %}"></script>
+
+<script src="{% static "frontend/assets/js/jquery.min.js" %}"></script>
+<script src="{% static "frontend/assets/js/browser.min.js" %}"></script>
+<script src="{% static "frontend/assets/js/breakpoints.min.js" %}"></script>
+<script src="{% static "frontend/assets/js/util.js" %}"></script>
+<script src="{% static "frontend/assets/js/main.js" %}"></script>
+{% endblock %}

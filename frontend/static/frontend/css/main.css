@@ -2869,3 +2869,56 @@ button.go-top {
 input[type="submit"]:hover:active, input[type="reset"]:hover:active, input[type="button"]:hover:active, button:hover:active, .button:hover:active {
     background-color: rgba(0, 0, 0, 0.75);
 }
+
+.instructions-wrapper {
+  padding: 4vh 0;
+  margin: auto;
+  width: min(85%, 800px);
+}
+
+h2.instruction-subtitle {
+  font-weight: 400;
+  text-align: center;
+  margin-top: 5vh;
+  color: black;
+}
+
+p.instruction-p, .instruction-list {
+  text-align: justify;
+  color: black;
+  font-weight: 500;
+}
+
+h2.instruction-subtitle:first-of-type {
+  margin-top: 0;
+}
+
+.instruction-list li {
+  margin-bottom: 3vh;
+}
+
+p.instruction-p a, .instruction-list a {
+  color: #3273dc !important;
+  cursor: pointer !important;
+}
+
+.weight {
+  outline: #000;
+}
+
+.go-to-app {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 70px;
+  color: white;
+}
+
+.go-to-app button {
+  color: black;
+}
+
+.go-to-app .button.is-success {
+  color: #000 !important;
+}

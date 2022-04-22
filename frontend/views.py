@@ -7,3 +7,6 @@ from rest_framework.status import HTTP_401_UNAUTHORIZED
 
 def home(request):
     return render(request, 'frontend/home.html')
+
+def instructions(request):
+    return render(request, 'frontend/instructions.html')

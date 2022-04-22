@@ -34,6 +34,7 @@ class CosineCalculator:
 
         aux = []
         tenants = []
+        # ipdb.set_trace()
         tenants.append(Profile.objects.get(user=house.landlord))
         rooms = Room.objects.filter(house=house)
 
@@ -42,6 +43,7 @@ class CosineCalculator:
                 tenants.append(room.tenant.profile)
 
         for tenant in tenants:
+            #ipdb.set_trace()
             tenants_interests.append(self.get_user_interests(tenant))
 
         interest_types = InterestType.objects.all()
@@ -52,7 +54,7 @@ class CosineCalculator:
                                                                      interest_type.name,
                                                                      profile)
             for i, tenant_interests in enumerate(tenants_interests):
-                # ipdb.set_trace()
+               # ipdb.set_trace()
                 tenants_interests_boolean[i] = tenants_interests_boolean[i] + self.get_boolean_list(
                     tenant_interests.get(interest_type.name),
                     interest_type.name,
@@ -64,7 +66,7 @@ class CosineCalculator:
             similarity_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
             similarity += similarity_buffer
 
-        # ipdb.set_trace()
+        #ipdb.set_trace()
         if similarity == 0:
             return (similarity, tenants_interests)
         else:

@@ -10,6 +10,7 @@ module.exports = {
     listusers: "./frontend/src/components/ListUsers.js",
     listrooms: "./frontend/src/components/ListRooms.js",
     main: "./frontend/src/components/Main.js",
+    instructions: "./frontend/src/components/Instructions.js",
     addhouse: "./frontend/src/components/AddHouse.js",
   },
   output: {
@@ -17,93 +18,95 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'react-virtualized/List': 'react-virtualized/dist/es/List',
-      'react-virtualized/AutoSizer': 'react-virtualized/dist/es/AutoSizer',
+      "react-virtualized/List": "react-virtualized/dist/es/List",
+      "react-virtualized/AutoSizer": "react-virtualized/dist/es/AutoSizer",
     },
   },
-  plugins: debug ? [
-    function() {
-      this.plugin('watch-run', function(watching, callback) {
-        console.log('Begin compile at ' + new Date());
-        callback();
-      })
-    }
-  ] : [ // Minify and compress only if it's in production.
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new UglifyJSPlugin(),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   sourceMap: true,   // enable source maps to map errors (stack traces) to modules
-    //   minimize: true,
-    //   output: {
-    //     comments: false, // remove all comments
-    //   },
-    // }),
-    new CompressionPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.(js|css|ttf|svg|eot)$/,
-      threshold: 10240,
-      minRatio: 0.8,
-    }),
-  ],
+  plugins: debug
+    ? [
+        function () {
+          this.plugin("watch-run", function (watching, callback) {
+            console.log("Begin compile at " + new Date());
+            callback();
+          });
+        },
+      ]
+    : [
+        // Minify and compress only if it's in production.
+        new webpack.DefinePlugin({
+          "process.env.NODE_ENV": JSON.stringify("production"),
+        }),
+        new UglifyJSPlugin(),
+        // new webpack.optimize.UglifyJsPlugin({
+        //   sourceMap: true,   // enable source maps to map errors (stack traces) to modules
+        //   minimize: true,
+        //   output: {
+        //     comments: false, // remove all comments
+        //   },
+        // }),
+        new CompressionPlugin({
+          asset: "[path].gz[query]",
+          algorithm: "gzip",
+          test: /\.(js|css|ttf|svg|eot)$/,
+          threshold: 10240,
+          minRatio: 0.8,
+        }),
+      ],
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: "babel-loader",
+        },
       },
-       {
+      {
         test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
-        use: [{
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-          }
-        }],
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
-        use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" }
-        ]
-      }
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+      },
     ],
     loaders: [
       {
         test: /\.jsx$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: "babel-loader",
         query: {
-          presets: ['react', 'es2015']
-        }
+          presets: ["react", "es2015"],
+        },
       },
       {
         test: /\.(png|jpg|gif)$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: "url-loader",
             options: {
-              limit: 2000000
-            }
-          }
-        ]
+              limit: 2000000,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
         use: [
           { loader: "style-loader" },
           { loader: "css-loader" },
-          { loader: 'sass-loader' },
-          { loader: 'less-loader' }
-        ]
-      }
-    ]
-  }
+          { loader: "sass-loader" },
+          { loader: "less-loader" },
+        ],
+      },
+    ],
+  },
 };
 
