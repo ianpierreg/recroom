@@ -2889,6 +2889,10 @@ p.instruction-p, .instruction-list {
   font-weight: 500;
 }
 
+p.question {
+  text-align: center;
+}
+
 h2.instruction-subtitle:first-of-type {
   margin-top: 0;
 }

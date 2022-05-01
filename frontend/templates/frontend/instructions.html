@@ -1,7 +1,11 @@
 {% extends './common/base.html'%}
+{% block mycss %} <style>
+  body:before {
+    content: none !important;
+  }
+</style> {% endblock %}
 
 
-Add something here
 {% block scripts %}
 {% load static %}
 <script src="{% static "frontend/build/instructions.js" %}"></script>

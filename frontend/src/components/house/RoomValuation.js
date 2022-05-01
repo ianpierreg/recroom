@@ -276,14 +276,18 @@ export default function RoomValuation({
         Nessa residência, a categoria de interesse com maior nível de
         importância, segundo os moradores atuais é, <b>{chosen}</b>, e dentro
         dessa categoria,{" "}
-        {length === 1
-          ? "o interesse mais escolhido foi"
-          : "os interesses mais escolhidos foram"}
-        {interestTotal.map((interest, index) => {
-          if (index === 0) return <b> {interest[0]}</b>;
-          if (length - 1 === index) return <b>{" e " + interest[0]}</b>;
-          return <b>{", " + interest[0]}</b>;
-        })}
+        {length === 1 && `o interesse mais escolhido foi: ${interest[0]}`}
+        {length > 1 && "os interesses mais escolhidos foram:" && (
+          <ol>
+            {interestTotal.map((interest, index) => (
+              <li key={interest[1]}>
+                <b>
+                  <i>{interest[0]}</i>
+                </b>
+              </li>
+            ))}
+          </ol>
+        )}{" "}
       </p>
     );
   };
@@ -300,14 +304,18 @@ export default function RoomValuation({
         Nessa residência, a categoria de interesse com segundo maior nível de
         importância para os moradores atuais é <b>{chosen}</b>, e dentro dessa
         categoria,{" "}
-        {length === 1
-          ? "o interesse mais escolhido foi"
-          : "os interesses mais escolhidos foram"}
-        {interestTotal.map((interest, index) => {
-          if (index === 0) return <b> {interest[0]}</b>;
-          if (length - 1 === index) return <b>{" e " + interest[0]}</b>;
-          return <b>{", " + interest[0]}</b>;
-        })}
+        {length === 1 && `o interesse mais escolhido foi: ${interest[0]}`}
+        {length > 1 && "os interesses mais escolhidos foram:" && (
+          <ol>
+            {interestTotal.map((interest, index) => (
+              <li key={interest[1]}>
+                <b>
+                  <i>{interest[0]}</i>
+                </b>
+              </li>
+            ))}
+          </ol>
+        )}{" "}
       </p>
     );
   };

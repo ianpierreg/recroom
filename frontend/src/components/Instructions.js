@@ -15,15 +15,18 @@ const Instructions = () => {
     <div>
       <Header token={token} setToken={setToken} />
       <div class="instructions-wrapper">
-        <h2 className="instruction-subtitle">Olá, seja bem-vinda(a)</h2>
+        <h2 className="instruction-subtitle">Olá, seja bem-vindo(a)</h2>
         <p className="instruction-p">
           Meu nome é Ian Pierre e eu sou aluno do curso de
-          <a href="https://computacao.ufba.br/pt-br/bacharelado-em-sistemas-de-informacao">
+          <a
+            href="https://computacao.ufba.br/pt-br/bacharelado-em-sistemas-de-informacao"
+            target="_blank"
+          >
             {" "}
             Sistemas de Informação{" "}
           </a>
           da
-          <a href="https://www.ufba.br/">
+          <a href="https://www.ufba.br/" target="_blank">
             {" "}
             Universidade Federal da Bahia-UFBA.{" "}
           </a>
@@ -47,11 +50,14 @@ const Instructions = () => {
         <h2 className="instruction-subtitle">Instruções</h2>
         <ol className="instruction-list">
           <li>
-            Acesse a página da <a href="/">aplicação</a> e clique no botão
-            “Cadastrar”, no canto superior direito. Ao ser clicado, este botão
-            leva o usuário para um formulário de cadastro simples, basta
-            preencher que além de fazer o cadastro, você será automaticamente
-            conectado à aplicação.
+            Acesse a página da{" "}
+            <a href="/" target="_blank">
+              aplicação
+            </a>{" "}
+            e clique no botão “Cadastrar”, no canto superior direito. Ao ser
+            clicado, este botão leva o usuário para um formulário de cadastro
+            simples, basta preencher que além de fazer o cadastro, você será
+            automaticamente conectado à aplicação.
           </li>
           <li>
             Clique no botão “Responder perguntas”, no canto superior direito e
@@ -85,18 +91,15 @@ const Instructions = () => {
           </li>
         </ol>
         <h2 className="instruction-subtitle">Em caso de dúvida,</h2>
-        <p className="instruction-p">
+        <p className="instruction-p question">
           ou algum problema no uso da ferramenta, entre em contato através do
           email ianpierreg@gmail.com.
         </p>
       </div>
       <div class="go-to-app">
-        <button
-         className="button is-success" 
-         onclick="location.replace('http://google.com/'),'_top'"
-        >
+        <a className="button is-success" href="/">
           Ir para aplicação
-        </button>
+        </a>
       </div>
       <Footer />
     </div>

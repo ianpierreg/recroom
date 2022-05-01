@@ -17,7 +17,7 @@ class House(models.Model):
     people = models.IntegerField("Quantidade de pessoas", null=False, blank=False)
     bathrooms = models.IntegerField("Quantidade de banheiros", null=False, blank=False)
     size = models.DecimalField("Tamanho(m²)", null=False, blank=False, max_digits=6, decimal_places=2)
-    address = models.OneToOneField(Address, on_delete=models.CASCADE, null=False, blank=True)
+    address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True, blank=True)
     landlord = models.ForeignKey(User, null=False, blank=True, on_delete=models.CASCADE)
 
 

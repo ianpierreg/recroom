@@ -14,106 +14,107 @@ from interest.models import InterestType
 
 
 class CosineCalculator:
-    def calculate_similarity_all_houses(self, houses, future_tenant, profile):
-        similarity_by_house = []
+  # that probably doesnt need profile so I should test with and without it to see if the results are consistrnt
+    def calculate_similarity_all_houses(self, houses, future_tenant, profile): 
+      similarity_by_house = []
 
-        for house in houses:
-            (house.value, house.tenants_interests) = self.calculate_similarity_house_tenant(house, future_tenant, profile)
-            similarity_by_house.append(house)
+      for house in houses:
+        (house.value, house.tenants_interests) = self.calculate_similarity_house_tenant(house, future_tenant, profile)
+        similarity_by_house.append(house)
 
-        return sorted(similarity_by_house, key=lambda x: x.value, reverse=True)
+      return sorted(similarity_by_house, key=lambda x: x.value, reverse=True)
 
     def calculate_similarity_house_tenant(self, house, future_tenant, profile):
-        comparated_value = 0
-        similarity = 0
-        values_for_attributes = []
-        tenants_interests = []
+      comparated_value = 0
+      similarity = 0
+      values_for_attributes = []
+      tenants_interests = []
 
-        interests_future_tenant = self.get_user_interests(future_tenant)
-        interests_future_tenant_boolean = []
+      interests_future_tenant = self.get_user_interests(future_tenant)
+      interests_future_tenant_boolean = []
 
-        aux = []
-        tenants = []
-        # ipdb.set_trace()
-        tenants.append(Profile.objects.get(user=house.landlord))
-        rooms = Room.objects.filter(house=house)
+      aux = []
+      tenants = []
+      # ipdb.set_trace()
+      tenants.append(Profile.objects.get(user=house.landlord))
+      rooms = Room.objects.filter(house=house)
 
-        for room in rooms:
-            if room.tenant is not None:
-                tenants.append(room.tenant.profile)
+      for room in rooms:
+          if room.tenant is not None:
+              tenants.append(room.tenant.profile)
 
-        for tenant in tenants:
-            #ipdb.set_trace()
-            tenants_interests.append(self.get_user_interests(tenant))
+      for tenant in tenants:
+          #ipdb.set_trace()
+          tenants_interests.append(self.get_user_interests(tenant))
 
-        interest_types = InterestType.objects.all()
+      interest_types = InterestType.objects.all()
 
-        tenants_interests_boolean = [[]] * len(tenants)
-        for interest_type in interest_types:
-            interests_future_tenant_boolean += self.get_boolean_list(interests_future_tenant.get(interest_type.name),
-                                                                     interest_type.name,
-                                                                     profile)
-            for i, tenant_interests in enumerate(tenants_interests):
-               # ipdb.set_trace()
-                tenants_interests_boolean[i] = tenants_interests_boolean[i] + self.get_boolean_list(
-                    tenant_interests.get(interest_type.name),
-                    interest_type.name,
-                    profile)
+      tenants_interests_boolean = [[]] * len(tenants)
+      for interest_type in interest_types:
+          interests_future_tenant_boolean += self.get_boolean_list(interests_future_tenant.get(interest_type.name),
+                                                                    interest_type.name,
+                                                                    profile)
+          for i, tenant_interests in enumerate(tenants_interests):
+              # ipdb.set_trace()
+              tenants_interests_boolean[i] = tenants_interests_boolean[i] + self.get_boolean_list(
+                  tenant_interests.get(interest_type.name),
+                  interest_type.name,
+                  profile)
 
-        similarity = 0
+      similarity = 0
 
-        for tenant_interests_boolean in tenants_interests_boolean:
-            similarity_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
-            similarity += similarity_buffer
+      for tenant_interests_boolean in tenants_interests_boolean:
+          similarity_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
+          similarity += similarity_buffer
 
-        #ipdb.set_trace()
-        if similarity == 0:
-            return (similarity, tenants_interests)
-        else:
-            return (similarity / len(tenants), tenants_interests)
+      #ipdb.set_trace()
+      if similarity == 0:
+          return (similarity, tenants_interests)
+      else:
+          return (similarity / len(tenants), tenants_interests)
 
-        # for key_future, interest_future_tenant in interests_future_tenant.items():
-        #     for tenant in tenants:
-        #         comparated_value += similarity
-        #         similarity = 0
-        #         tenant_interests = self.get_user_interests(tenant)
-        #         for key_tenant, tenant_interest in tenant_interests.items():
-        #             if key_future == key_tenant:
-        #                 similarity = self.get_similarity(self.get_boolean_list(interests_future_tenant.get(key_future), key_future),
-        #                                                  self.get_boolean_list(tenant_interests.get(key_future), key_future))
-        #
-        #                 aux.append(numpy.array(self.get_boolean_list(tenant_interests.get(key_future), key_future)))
-        #
-        #     if comparated_value > 0:
-        #         attribute_value = comparated_value / len(tenants)
-        #         if len(aux) > 0:
-        #             future_tenant = self.get_boolean_list(interests_future_tenant.get(key_future), key_future)
-        #             aux2 = numpy.vstack(aux)
-        #             similarity2 = cosine_similarity(numpy.array(future_tenant).reshape(1, -1), aux2)
-        #             print("#must be true#")
-        #             sklearn_cosine_similarity = self.attributes_media_array(similarity2, len(tenants))
-        #             print(round(attribute_value, 4) == round(sklearn_cosine_similarity, 4))
-        #         values_for_attributes.append(attribute_value)
-        #
-        #         comparated_value = 0
-        # return self.attributes_media(values_for_attributes)
+      # for key_future, interest_future_tenant in interests_future_tenant.items():
+      #     for tenant in tenants:
+      #         comparated_value += similarity
+      #         similarity = 0
+      #         tenant_interests = self.get_user_interests(tenant)
+      #         for key_tenant, tenant_interest in tenant_interests.items():
+      #             if key_future == key_tenant:
+      #                 similarity = self.get_similarity(self.get_boolean_list(interests_future_tenant.get(key_future), key_future),
+      #                                                  self.get_boolean_list(tenant_interests.get(key_future), key_future))
+      #
+      #                 aux.append(numpy.array(self.get_boolean_list(tenant_interests.get(key_future), key_future)))
+      #
+      #     if comparated_value > 0:
+      #         attribute_value = comparated_value / len(tenants)
+      #         if len(aux) > 0:
+      #             future_tenant = self.get_boolean_list(interests_future_tenant.get(key_future), key_future)
+      #             aux2 = numpy.vstack(aux)
+      #             similarity2 = cosine_similarity(numpy.array(future_tenant).reshape(1, -1), aux2)
+      #             print("#must be true#")
+      #             sklearn_cosine_similarity = self.attributes_media_array(similarity2, len(tenants))
+      #             print(round(attribute_value, 4) == round(sklearn_cosine_similarity, 4))
+      #         values_for_attributes.append(attribute_value)
+      #
+      #         comparated_value = 0
+      # return self.attributes_media(values_for_attributes)
 
 
     def get_user_interests(self, tenant):
-        interests_tenant = {}
-        interests_without_type = tenant.interests.all()
-        for interest_without_type in interests_without_type:
-            type_interest = interest_without_type.interest_type.name
-            if type_interest not in interests_tenant:
-                profile_interest = ProfileInterests.objects.get(interest_id=interest_without_type.id, profile_id=tenant.id)
-                interests_tenant[type_interest] = {
-                    'importance': profile_interest.importance,
-                    'interests': [interest_without_type.name]
-                }
-            else:
-                interests_tenant[type_interest]['interests'].append(interest_without_type.name)
+      interests_tenant = {}
+      interests_without_type = tenant.interests.all()
+      for interest_without_type in interests_without_type:
+        type_interest = interest_without_type.interest_type.name
+        if type_interest not in interests_tenant:
+          profile_interest = ProfileInterests.objects.get(interest_id=interest_without_type.id, profile_id=tenant.id)
+          interests_tenant[type_interest] = {
+              'importance': profile_interest.importance,
+              'interests': [interest_without_type.name]
+          }
+        else:
+          interests_tenant[type_interest]['interests'].append(interest_without_type.name)
 
-        return interests_tenant
+      return interests_tenant
 
     def attributes_media(self, values_for_attributes):
         attributes_media = 0
