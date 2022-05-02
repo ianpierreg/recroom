@@ -25,5 +25,6 @@ urlpatterns = [
     path('evaluate/', views.evaluate, name='evaluate'),
     path('valuations/', views.get_valuations, name='valuation'),
     path('logout/', views.logout, name='logout'),
+    path('exp/', views.setup_experiment, name='exp'),
 ]
 

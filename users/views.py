@@ -42,7 +42,8 @@ def get_save_interests(request):
         profile.save()
         for interest in interests:
             profile.interests.add(interest)
-            profile_interest = ProfileInterests.objects.get(interest_id=interest.id, profile_id=profile.id)
+            profile_interest = ProfileInterests.objects.get(
+                interest_id=interest.id, profile_id=profile.id)
             profile_interest.importance = request.data['importance']
             profile_interest.save()
 
@@ -61,6 +62,7 @@ def get_save_interests(request):
 @csrf_exempt
 @api_view(['POST'])
 def create_user(request):
+
     # ipdb.set_trace()
     user = CreateUserSerializer(data=request.data)
     if user.is_valid():
@@ -161,11 +163,53 @@ def assign_random_interests_to_users(user):
             sample_max_size = 1
             sample_min_size = 1
 
-        # ipdb.set_trace()
-        print('size', random.choice(range(sample_min_size, sample_max_size+1)))
         sample_size = random.choice(range(sample_min_size, sample_max_size+1))
         interests = Interest.objects.filter(
             interest_type=itype).order_by('?')[:sample_size]
+
+        if itype.id == 4:
+          # ipdb.set_trace()
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[25, 26, 27], [30, 31, 32], [33, 34, 35]]))
+          interests = random.sample(list(interests), 2)
+
+        if itype.id == 17:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[53, 156], [52, 155]]))
+
+        if itype.id == 16:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[49, 50], [51, 54]]))
+          interests = random.sample(list(interests), random.choice(range(1, 3)))
+
+        if itype.id == 14:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[43, 44], [42, 158]]))
+          interests = random.sample(list(interests), random.choice(range(1, 3)))
+
+        if itype.id == 20:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[76, 77, 79], [74, 75]]))
+          interests = random.sample(list(interests), 2)
+
+        if itype.id == 22:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[88, 91, 89], [97, 95, 93, 98]]))
+          interests = random.sample(list(interests), len(interests)-1)
+
+        if itype.id == 18:
+            interests = Interest.objects.filter(pk__in=random.choice(
+              [[62, 63], [56, 59, 55]]))
+            interests = random.sample(list(interests), 2)
+
+        if itype.id == 15:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[46, 48], [47, 159]]))
+
+        if itype.id == 19:
+          interests = Interest.objects.filter(pk__in=random.choice(
+              [[65, 66, 67], [69, 70]]))
+          interests = random.sample(list(interests), 2)
 
         for interest in interests:
             user.profile.interests.add(interest)
@@ -183,21 +227,20 @@ def assign_random_interests_to_users(user):
                 "Preferências Cinematográficas",
                 "Preferências de tempo livro e Hobbies",
             ]:
-                profile_interest.importance = random.choice(range(4, 6))
-
-            if "Estilo de apego" in itype.name:
-                profile_interest.importance = random.choice(range(0, 4))
+                profile_interest.importance = random.choice(range(3, 6))
 
             profile_interest.save()
 
 # def willBeSeed():
 # @csrf_exempt
 # @api_view(['POST'])
-# def create_user(request):
-#   # create 20 landlords
 
-#   createLandlorsAndHouses()
-#   createTenantsAndRooms()
+
+def setup_experiment(request):
+    # create 20 landlords
+
+    createLandlorsAndHouses()
+    createTenantsAndRooms()
 
 
 def createLandlorsAndHouses():
@@ -267,7 +310,7 @@ def createTenantsAndRooms():
             assign_random_interests_to_users(user_saved)
             houses = House.objects.all()
             cosine = CosineCalculator()
-            ipdb.set_trace()
+            # ipdb.set_trace()
             houses = cosine.calculate_similarity_all_houses(
                 houses, user_saved.profile, user_saved.profile)
 
