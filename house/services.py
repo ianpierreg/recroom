@@ -19,7 +19,8 @@ class CosineCalculator:
       similarity_by_house = []
 
       for house in houses:
-        (house.value, house.tenants_interests) = self.calculate_similarity_house_tenant(house, future_tenant, profile)
+        (house.value, house.tenants_interests, house.interests_future_tenant) = self.calculate_similarity_house_tenant(
+            house, future_tenant, profile)
         similarity_by_house.append(house)
 
       return sorted(similarity_by_house, key=lambda x: x.value, reverse=True)
@@ -64,14 +65,15 @@ class CosineCalculator:
       similarity = 0
 
       for tenant_interests_boolean in tenants_interests_boolean:
+          # ipdb.set_trace()
           similarity_buffer = self.get_similarity(interests_future_tenant_boolean, tenant_interests_boolean)
           similarity += similarity_buffer
 
       #ipdb.set_trace()
       if similarity == 0:
-          return (similarity, tenants_interests)
+          return (similarity, tenants_interests, interests_future_tenant)
       else:
-          return (similarity / len(tenants), tenants_interests)
+          return (similarity / len(tenants), tenants_interests, interests_future_tenant)
 
       # for key_future, interest_future_tenant in interests_future_tenant.items():
       #     for tenant in tenants:
@@ -149,6 +151,7 @@ class CosineCalculator:
             return 0
 
     def get_boolean_list(self, user_interests, interest_type, profile):
+        # ipdb.set_trace()
         attributes_x_type = []
 
         interests_by_type = Interest.objects.filter(interest_type__name=interest_type).order_by('name')

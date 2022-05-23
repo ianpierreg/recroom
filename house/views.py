@@ -77,6 +77,7 @@ def get_rooms(request):
             new_room = {
                 "value": house.value,
                 "tenants_interests": house.tenants_interests,
+                "future_tenant_interests": house.interests_future_tenant
             }
             new_room.update(room_serializer.data)
             rooms.append(new_room)

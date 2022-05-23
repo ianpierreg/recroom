@@ -5636,7 +5636,7 @@ a.dropdown-item.is-active {
   .modal-content,
   .modal-card {
     margin: 0 auto;
-    max-height: 70vh;
+    max-height: 90vh;
     width: min(100%, 840px);
   }
 }
@@ -5743,7 +5743,7 @@ a.dropdown-item.is-active {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  max-height: 70vh;
+  max-height: 85vh;
   overflow: hidden;
 }
 
@@ -5817,7 +5817,8 @@ a.dropdown-item.is-active {
           flex-grow: 1;
   -ms-flex-negative: 1;
       flex-shrink: 1;
-  overflow: auto;
+  max-height: calc(85vh - 61px);
+  overflow: hidden;
   padding: 20px;
 }
 
@@ -6282,6 +6283,26 @@ a.navbar-item:hover, a.navbar-item.is-active,
   display: none;
   height: 1px;
   margin: 0.5rem 0;
+}
+
+.infotip-my-choices li {
+  text-align: left;
+}
+
+.infotip-my-choices b {
+  color: white;
+}
+
+.infotip-button {
+      line-height: 100%;
+        padding: 0;
+        height: 18px;
+        width: 18px;
+        font-weight: bold;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 8px;
 }
 
 @media screen and (max-width: 1007px) {
@@ -9589,7 +9610,6 @@ label.panel-block:hover {
 .valuation .second-column {
   width: 60%;
   overflow-y: scroll;
-  height: 750px;
   padding: 30px;
   box-sizing: border-box;
 }

@@ -24,12 +24,15 @@ export default function RoomValuation({
     " e interesses do seu perfil e dos perfis dos moradores da residência a qual esse quarto pertence.";
   const valuationDesc = "Por favor, nos ajude avaliando a recomendação";
   const [showValuationForm, setShowValuationForm] = useState(false);
+  const [scoreByType, setScoreByType] = useState();
   const [headerHeight, setHeaderHeight] = useState("100vh");
   const ref = useRef();
   const ref2 = useRef();
 
   useEffect(() => {
-    setHeaderHeight(`calc(100vh - ${ref.current.offsetHeight}px)`);
+    setHeaderHeight(`calc(85vh - ${ref.current.offsetHeight}px)`);
+     if(opened) document.documentElement.style.overflow = 'hidden';
+     else document.documentElement.style.overflow = 'unset';
   }, [ref, opened]);
 
   useEffect(() => {
@@ -60,159 +63,118 @@ export default function RoomValuation({
   };
 
   useEffect(() => {
-    let d = {};
-    if (room.description === "quan")
-      console.log("tenant_interests", room.tenants_interests);
-    room.tenants_interests.forEach((t) => {
-      Object.keys(t).forEach((e) => {
-        if (d[e]) {
-          d[e].importanceTotal += t[e].importance;
+    const { future_tenant_interests, tenants_interests } = room;
+    let frontEndScoreSum = 0;
+    let csByTypeSum = {};
+    let csByHouse;
+    tenants_interests.forEach((tenant_interests) => {
+      let csByTenant;
+      Object.keys(tenant_interests).forEach((interest_type) => {
+        let numerator = 0;
+        tenant_interests[interest_type].interests.forEach((interest) => {
+          const { interests, importance } =
+            future_tenant_interests[interest_type];
+          numerator +=
+            interests.some((i) => i === interest) *
+            importance *
+            tenant_interests[interest_type].importance;
+        });
+
+        // debugger;
+        const denominator1 = Math.sqrt(
+          Math.pow(tenant_interests[interest_type].importance, 2) *
+            tenant_interests[interest_type].interests.length
+        );
+        const denominator2 = Math.sqrt(
+          Math.pow(future_tenant_interests[interest_type].importance, 2) *
+            future_tenant_interests[interest_type].interests.length
+        );
+
+        tenant_interests[interest_type].csByType =
+          numerator / (denominator1 * denominator2);
+
+        if (!csByTypeSum[interest_type]) {
+          csByTypeSum[interest_type] = tenant_interests[interest_type].csByType;
         } else {
-          d[e] = { importanceTotal: t[e].importance, interestTotal: {} };
+          csByTypeSum[interest_type] +=
+            tenant_interests[interest_type].csByType;
         }
 
-        t[e].interests.forEach((f) => {
-          if (d[e]["interestTotal"][f]) {
-            debugger;
-            d[e]["interestTotal"][f] += 1;
-          } else {
-            debugger;
-            d[e]["interestTotal"][f] = 1;
+        if (!tenant_interests.csByTenantSum) {
+          tenant_interests.csByTenantSum =
+            tenant_interests[interest_type].csByType;
+        } else {
+          tenant_interests.csByTenantSum +=
+            tenant_interests[interest_type].csByType;
+        }
+      });
+
+      tenant_interests.csByTenant =
+        tenant_interests.csByTenantSum /
+        (Object.keys(tenant_interests).length - 1);
+
+      frontEndScoreSum += tenant_interests.csByTenant;
+    });
+
+    console.log({
+      future_tenant_interests,
+      tenants_interests,
+      room,
+      sum: frontEndScoreSum / tenants_interests.length,
+      csByTypeSum,
+    });
+
+    Object.keys(csByTypeSum).forEach((c) => {
+      console.log({
+        value: (csByTypeSum[c] / tenants_interests.length).toFixed(2),
+        key: c,
+      });
+      csByTypeSum[c] = (csByTypeSum[c] / tenants_interests.length).toFixed(2);
+    });
+
+    console.log({ csByTypeSum });
+    const scoreByType =
+      Object.values(csByTypeSum).reduce((a, b) => a + b, 0) /
+      (Object.keys(tenants_interests[0]).length - 2); // remove 2 because I put two new properties in this weird object
+    console.log({ scoreByType });
+    const interestRecurrence = {};
+    const interestsByTypes = [...tenants_interests, future_tenant_interests];
+    Object.keys(future_tenant_interests).forEach((type) => {
+      future_tenant_interests[type].interests.forEach((interest) => {
+        debugger;
+        tenants_interests.forEach((tenant_interest) => {
+          const found = tenant_interest[type].interests.find(
+            (i) => i === interest
+          );
+          if (found && future_tenant_interests[type].importance > 0) {
+            if (!interestRecurrence[type]) {
+              interestRecurrence[type] = {
+                interests: { [interest]: 1 },
+                value: csByTypeSum[type],
+              };
+            } else {
+              if (!interestRecurrence[type].interests[interest]) {
+                interestRecurrence[type].interests[interest] = 1;
+              } else {
+                interestRecurrence[type].interests[interest] += 1;
+              }
+            }
           }
         });
       });
     });
 
-    Object.values(d).forEach((ff) => {
-      ff.interestTotal = Object.entries(ff.interestTotal);
-    });
-
-    //     d = {
-    //   "Estilo Musical": {
-    //       "importanceTotal": 5,
-    //       "interestTotal": [
-    //           [
-    //               "Pagode", 2
-    //           ],
-    //          [
-    //               "Rock", 2
-    //           ],
-    //          [
-    //               "Axé", 2
-    //           ]
-    //       ]
-    //   },
-    //   "Filmes e Séries": {
-    //       "importanceTotal": 4,
-    //       "interestTotal": [
-    //           [
-    //               "Comédia",
-    //               2
-    //           ],
-    //           [
-    //               "Ação",
-    //               1
-    //           ]
-    //       ]
-    //   },
-    //   "Passeios": {
-    //       "importanceTotal": 4,
-    //       "interestTotal": [
-    //           [
-    //               "Praia",
-    //               2
-    //           ],
-    //       ]
-    //   }
-    // }
-    if (room.description === "quan") console.log("thats the d", d);
-    setTenantChoices(d);
-    debugger;
-    let i = 0;
-    let da = {};
-    while (Object.keys(d).length < 3 && i < Object.keys(d).length) {
-      let e = Object.keys(d)[i];
-      if (d[e].importanceTotal === 5) da[e] = d[e];
-      i++;
-    }
-    i = 0;
-    while (Object.keys(d).length < 3 && i < Object.keys(d).length) {
-      let e = Object.keys(d)[i];
-      if (d[e].importanceTotal === 4) da[e] = d[e];
-      i++;
-    }
-    i = 0;
-    while (Object.keys(d).length < 3 && i < Object.keys(d).length) {
-      let e = Object.keys(d)[i];
-      if (d[e].importanceTotal === 3) da[e] = d[e];
-      i++;
-    }
-    if (room.description === "quan") console.log("da", da);
-    let v = Object.keys(da).map((a) => ({ typeOfInterest: a, ...da[a] }));
-
-    //   v =  [
-    //   {
-    //       "importanceTotal": 2,
-    //       "typeOfInterest": "cinema",
-    //         "interestTotal": {
-    //           "forro": 2,
-    //           "funk": 3,
-    //           'outro': 1
-    //         }
-    //   },
-    //   {
-    //       "importanceTotal": 3,
-    //       "typeOfInterest": "passeio",
-    //         "interestTotal": {
-    //           "forro": 1,
-    //           "funk": 5,
-    //           'outro': 4
-    //         }
-    //   },
-    //   {
-    //       "typeOfInterest": "type",
-    //       "importanceTotal": 1,
-    //       "interestTotal": {
-    //           "fgfgf": 2,
-    //           "dfgfdg": 1,
-    //           "asa": 4,
-    //           "azul": 2,
-    //           "china": 3
-    //       }
-    //   },
-    //   {
-    //       "importanceTotal": 5,
-    //       "typeOfInterest": "vida",
-    //       "interestTotal": {
-    //           "tipo": 2
-    //       }
-    //   },
-    //   {
-    //       "typeOfInterest": "tipo",
-    //       "importanceTotal": 2,
-    //       "interestTotal": {
-    //           "tipo": 2
-    //       }
-    //   },
-    //   {
-    //       "importanceTotal": 4,
-    //       "typeOfInterest": "musica",
-    //       "interestTotal": {
-    //           "forro": 4,
-    //           "funk": 2
-    //       }
-    //   }
-    // ]
-    v.sort((a, b) => a.importanceTotal - b.importanceTotal);
-
-    v.forEach((c) => {
-      console.log("c", c);
-      c.interestTotal = Object.entries(c.interestTotal)
-        .sort(([, a], [, b]) => a - b)
-        .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
-    });
-
-    console.log("viva", v);
+    const sorted = {};
+    Object.keys(interestRecurrence)
+      .sort(function (a, b) {
+        return interestRecurrence[b].value - interestRecurrence[a].value;
+      })
+      .forEach(function (key) {
+        sorted[key] = interestRecurrence[key];
+      });
+    setScoreByType(sorted);
+    console.log({ sorted });
+   
   }, []);
 
   const handleSubmit = (e) => {
@@ -264,90 +226,20 @@ export default function RoomValuation({
       });
   };
 
-  const firstCategory = () => {
-    if (!tenantsChoices || !Object.keys(tenantsChoices)[0]) return null;
-    const chosen = Object.keys(tenantsChoices)[0];
-    const { interestTotal } = tenantsChoices[chosen];
-    const length = interestTotal.length;
-    if (length === 0) return null;
-
-    return (
-      <p>
-        Nessa residência, a categoria de interesse com maior nível de
-        importância, segundo os moradores atuais é, <b>{chosen}</b>, e dentro
-        dessa categoria,{" "}
-        {length === 1 && `o interesse mais escolhido foi: ${interest[0]}`}
-        {length > 1 && "os interesses mais escolhidos foram:" && (
-          <ol>
-            {interestTotal.map((interest, index) => (
-              <li key={interest[1]}>
-                <b>
-                  <i>{interest[0]}</i>
-                </b>
-              </li>
-            ))}
-          </ol>
-        )}{" "}
-      </p>
-    );
+  const amountInWords = {
+    1: "um",
+    2: "dois",
+    3: "trës",
+    4: "quatro",
+    5: "cinco",
   };
-
-  const secondCategory = () => {
-    if (!tenantsChoices || !Object.keys(tenantsChoices)[1]) return null;
-    const chosen = Object.keys(tenantsChoices)[1];
-    const { interestTotal } = tenantsChoices[chosen];
-    const length = interestTotal.length;
-    if (length === 0) return null;
-
-    return (
-      <p>
-        Nessa residência, a categoria de interesse com segundo maior nível de
-        importância para os moradores atuais é <b>{chosen}</b>, e dentro dessa
-        categoria,{" "}
-        {length === 1 && `o interesse mais escolhido foi: ${interest[0]}`}
-        {length > 1 && "os interesses mais escolhidos foram:" && (
-          <ol>
-            {interestTotal.map((interest, index) => (
-              <li key={interest[1]}>
-                <b>
-                  <i>{interest[0]}</i>
-                </b>
-              </li>
-            ))}
-          </ol>
-        )}{" "}
-      </p>
-    );
-  };
-
-  const thirdCategory = () => {
-    if (!tenantsChoices || !Object.keys(tenantsChoices)[2]) return null;
-    const chosen = Object.keys(tenantsChoices)[2];
-    const { interestTotal } = tenantsChoices[chosen];
-    const length = interestTotal.length;
-    if (length === 0) return null;
-
-    return (
-      <p>
-        Além dos interesses citados acima, os moradores da residência também
-        mostram interesse na categoria <b>{chosen}</b>, e dentro dessa
-        categoria,{" "}
-        {length === 1
-          ? "o interesse mais escolhido foi"
-          : "os interesses mais escolhidos foram"}
-        {interestTotal.map((interest, index) => {
-          if (index === 0) return <b> {interest[0]}</b>;
-          if (length - 1 === index) return <b>{" e " + interest[0]}</b>;
-          return <b>{", " + interest[0]}</b>;
-        })}
-      </p>
-    );
-  };
-
   return (
     <div className={opened ? "modal is-active" : "modal"}>
       <div className="modal-background" />
-      <div className="modal-card column is-mobile is-three-fifths">
+      <div
+        className="modal-card column is-mobile is-three-fifths"
+        style={{ padding: 0 }}
+      >
         <header className="modal-card-head" ref={ref}>
           <span className="modal-card-title is-size-5-mobile">
             Avaliar recomendação {room.description}
@@ -424,9 +316,72 @@ export default function RoomValuation({
             </div>
             <div className="second-column">
               <div className="house-info">
-                {firstCategory()}
-                {secondCategory()}
-                {thirdCategory()}
+                {scoreByType &&
+                  Object.entries(scoreByType).map(([key, item]) => {
+                    return (
+                      <div key={key}>
+                        <p>
+                          O seu score de afinidade considerando apenas o tipo de
+                          interesse <b>{key}</b> para essa residência (que
+                          contém{" "}
+                          <b>{amountInWords[room.tenants_interests.length]}</b>{" "}
+                          {room.tenants_interests.length === 1
+                            ? "morador"
+                            : "moradores"}
+                          ) é <b>{item.value * 100}%</b> e dentro desse tipo de
+                          interesse:
+                          <Tooltip
+                            tooltipClassName="infotip-my-choices"
+                            content={
+                              <div>
+                                Abaixo está a lista das escolhas para o tipo de
+                                interesse {<b>{key}</b>} (importância de{" "}
+                                {
+                                  <b>
+                                    {
+                                      room.future_tenant_interests[key]
+                                        .importance
+                                    }
+                                  </b>
+                                }
+                                ):{" "}
+                                <ul>
+                                  {room.future_tenant_interests[
+                                    key
+                                  ].interests.map((d) => (
+                                    <li key={d}>"{d}"</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            }
+                          >
+                            <button className="infotip-button">i</button>
+                          </Tooltip>
+                        </p>
+                        <ul>
+                          {Object.keys(item.interests)
+                            .sort(function (a, b) {
+                              return item.interests[b] - item.interests[a];
+                            })
+                            .map((key2) =>
+                              item.interests[key2] == 1 ? (
+                                <li>
+                                  Você e mais <b>um</b> morador da residência
+                                  selecionaram <b>"{key2}"</b>;
+                                </li>
+                              ) : (
+                                <li>
+                                  Você e mais{" "}
+                                  <b>{amountInWords[item.interests[key2]]}</b>{" "}
+                                  moradores da residência selecionaram{" "}
+                                  <b>"{key2}"</b>;
+                                </li>
+                              )
+                            )}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 <button
                   className="go-to-valuation"
                   onClick={() => setShowValuationForm(true)}
