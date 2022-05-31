@@ -31,7 +31,7 @@ const Instructions = () => {
             Universidade Federal da Bahia-UFBA.{" "}
           </a>
           Obrigado por fazer parte deste experimento como participante
-          voluntário, a sua avaliação é de suma importância para o sucesso
+          voluntário, a sua avaliação é de suma importância para o sucesso do
           trabalho proposto e desenvolvido.
         </p>
         <h2 className="instruction-subtitle">O que é o sistema</h2>
@@ -39,12 +39,12 @@ const Instructions = () => {
           O protótipo de aplicação desenvolvido é um sistema de recomendação
           baseado em conteúdo que visa ranquear as residências em que o usuário
           buscador (aquele que busca uma residência, nesse caso você, voluntário
-          do experimento) que tenha maior possibilidade de afinidade com os
+          do experimento) tenha maior possibilidade de afinidade com os
           moradores atuais daquela residência compartilhada.
         </p>
         <p className="instruction-p">
           A recomendação se baseia nas respostas dadas no formulário de gostos e
-          interesses respondida por cada morador atual da residência
+          interesses respondido por cada morador atual da residência
           compartilhada e pelo usuário buscador.
         </p>
         <h2 className="instruction-subtitle">Instruções</h2>
@@ -85,9 +85,10 @@ const Instructions = () => {
             “Avaliar” do lado esquerdo da residência. Na página que será aberta,
             é possível ver os principais interesses em comum com os moradores
             daquela residência. Além disso, é possível atribuir uma nota de 1 a
-            5 àquela avaliação (onde 1 indica que não gostou daquele residência
-            e 5 indica que você gostou muito) e, opcionalmente, deixar um
-            comentário sobre a avaliação.
+            5 àquela avaliação (onde 1 indica que não gostou da posição da residência no ranking
+            e 5 indica que você gostou muito e acha a posição no ranking adequada) e, opcionalmente, deixar um
+            comentário sobre a avaliação. Tenha em mente que a avaliação é em relação a posição da casa no ranking e 
+            o score de afinidade e não sobre ter gostado ou não do perfil dos moradores da residência.
           </li>
         </ol>
         <h2 className="instruction-subtitle">Em caso de dúvida,</h2>
@@ -103,7 +104,7 @@ const Instructions = () => {
       </div>
       <Footer />
     </div>
-  ); 
+  );
 };
 
 const wrapper = document.getElementById("app");

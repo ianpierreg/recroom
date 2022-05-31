@@ -31,8 +31,8 @@ export default function RoomValuation({
 
   useEffect(() => {
     setHeaderHeight(`calc(85vh - ${ref.current.offsetHeight}px)`);
-     if(opened) document.documentElement.style.overflow = 'hidden';
-     else document.documentElement.style.overflow = 'unset';
+    if (opened) document.documentElement.style.overflow = "hidden";
+    else document.documentElement.style.overflow = "unset";
   }, [ref, opened]);
 
   useEffect(() => {
@@ -63,80 +63,10 @@ export default function RoomValuation({
   };
 
   useEffect(() => {
-    const { future_tenant_interests, tenants_interests } = room;
-    let frontEndScoreSum = 0;
-    let csByTypeSum = {};
-    let csByHouse;
-    tenants_interests.forEach((tenant_interests) => {
-      let csByTenant;
-      Object.keys(tenant_interests).forEach((interest_type) => {
-        let numerator = 0;
-        tenant_interests[interest_type].interests.forEach((interest) => {
-          const { interests, importance } =
-            future_tenant_interests[interest_type];
-          numerator +=
-            interests.some((i) => i === interest) *
-            importance *
-            tenant_interests[interest_type].importance;
-        });
+    const { future_tenant_interests, tenants_interests, csByTypeSum } = room;
+    if(!csByTypeSum) return
 
-        // debugger;
-        const denominator1 = Math.sqrt(
-          Math.pow(tenant_interests[interest_type].importance, 2) *
-            tenant_interests[interest_type].interests.length
-        );
-        const denominator2 = Math.sqrt(
-          Math.pow(future_tenant_interests[interest_type].importance, 2) *
-            future_tenant_interests[interest_type].interests.length
-        );
-
-        tenant_interests[interest_type].csByType =
-          numerator / (denominator1 * denominator2);
-
-        if (!csByTypeSum[interest_type]) {
-          csByTypeSum[interest_type] = tenant_interests[interest_type].csByType;
-        } else {
-          csByTypeSum[interest_type] +=
-            tenant_interests[interest_type].csByType;
-        }
-
-        if (!tenant_interests.csByTenantSum) {
-          tenant_interests.csByTenantSum =
-            tenant_interests[interest_type].csByType;
-        } else {
-          tenant_interests.csByTenantSum +=
-            tenant_interests[interest_type].csByType;
-        }
-      });
-
-      tenant_interests.csByTenant =
-        tenant_interests.csByTenantSum /
-        (Object.keys(tenant_interests).length - 1);
-
-      frontEndScoreSum += tenant_interests.csByTenant;
-    });
-
-    console.log({
-      future_tenant_interests,
-      tenants_interests,
-      room,
-      sum: frontEndScoreSum / tenants_interests.length,
-      csByTypeSum,
-    });
-
-    Object.keys(csByTypeSum).forEach((c) => {
-      console.log({
-        value: (csByTypeSum[c] / tenants_interests.length).toFixed(2),
-        key: c,
-      });
-      csByTypeSum[c] = (csByTypeSum[c] / tenants_interests.length).toFixed(2);
-    });
-
-    console.log({ csByTypeSum });
-    const scoreByType =
-      Object.values(csByTypeSum).reduce((a, b) => a + b, 0) /
-      (Object.keys(tenants_interests[0]).length - 2); // remove 2 because I put two new properties in this weird object
-    console.log({ scoreByType });
+    //it will get the occurrences of a interest in the future tenant and everyone in the house
     const interestRecurrence = {};
     const interestsByTypes = [...tenants_interests, future_tenant_interests];
     Object.keys(future_tenant_interests).forEach((type) => {
@@ -174,8 +104,7 @@ export default function RoomValuation({
       });
     setScoreByType(sorted);
     console.log({ sorted });
-   
-  }, []);
+  }, [room]);
 
   const handleSubmit = (e) => {
     const csrftoken = getCookie("csrftoken");
@@ -214,11 +143,20 @@ export default function RoomValuation({
       })
       .then((data) => {
         if (data) {
-          Swal.fire(
-            "Avaliação bem sucedida",
-            "Obrigado por avaliar esse quarto :)",
-            "success"
-          );
+          if (data.valuation === 10) {
+            Swal.fire(
+              "Todas as residencias foram avaliados",
+              "Obrigado por participar do experimento :)",
+              "success"
+            );
+          } else {
+            Swal.fire(
+              "Avaliação bem sucedida",
+              "Obrigado por avaliar a recomendação :)",
+              "success"
+            );
+          }
+
           closeValuation(valuation);
         } else {
           Swal.fire("Erro ao avaliar", "Tente novamente", "error");
@@ -233,6 +171,7 @@ export default function RoomValuation({
     4: "quatro",
     5: "cinco",
   };
+
   return (
     <div className={opened ? "modal is-active" : "modal"}>
       <div className="modal-background" />
@@ -322,7 +261,7 @@ export default function RoomValuation({
                       <div key={key}>
                         <p>
                           O seu score de afinidade considerando apenas o tipo de
-                          interesse <b>{key}</b> para essa residência (que
+                          interesse <b>"{key}"</b> para essa residência (que
                           contém{" "}
                           <b>{amountInWords[room.tenants_interests.length]}</b>{" "}
                           {room.tenants_interests.length === 1
@@ -334,8 +273,9 @@ export default function RoomValuation({
                             tooltipClassName="infotip-my-choices"
                             content={
                               <div>
-                                Abaixo está a lista das escolhas para o tipo de
-                                interesse {<b>{key}</b>} (importância de{" "}
+                                Abaixo está a lista das suas escolhas para o
+                                tipo de interesse {<b>"{key}"</b>} (importância
+                                de{" "}
                                 {
                                   <b>
                                     {

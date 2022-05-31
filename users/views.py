@@ -112,7 +112,8 @@ def evaluate(request):
     valuation, created = Valuation.objects.update_or_create(
         room_id=room.id, profile_id=profile.id, defaults=request.data)
 
-    return Response({"valuation": 1})
+    valuations = Valuation.objects.filter(profile_id=428).count()
+    return Response({"valuation": valuations})
 
 # @login_required
 # def update_user(request):
