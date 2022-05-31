@@ -267,7 +267,7 @@ export default function RoomValuation({
                           {room.tenants_interests.length === 1
                             ? "morador"
                             : "moradores"}
-                          ) é <b>{item.value * 100}%</b> e dentro desse tipo de
+                          ) é <b>{(item.value * 100).toFixed(2)}%</b> e dentro desse tipo de
                           interesse:
                           <Tooltip
                             tooltipClassName="infotip-my-choices"

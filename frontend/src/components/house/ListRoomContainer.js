@@ -107,7 +107,7 @@ export default function ListRoomContainer({ endpoint, token }) {
       .then((res) => {
         console.log("valuations", res);
         if (!res || !res.valuations) return;
-        const roomsBound = data.rooms.map((room) => {
+        let roomsBound = data.rooms.map((room) => {
           room.valuation = res.valuations.find(
             (valuation) => valuation.room === room.id
           );
@@ -123,6 +123,7 @@ export default function ListRoomContainer({ endpoint, token }) {
           return room;
         });
 
+        roomsBound = roomsBound.sort((a, b) => b.value - a.value)
        
         setDataBound({ ...data, rooms: roomsBound });
       });
