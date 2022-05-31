@@ -5818,7 +5818,6 @@ a.dropdown-item.is-active {
   -ms-flex-negative: 1;
       flex-shrink: 1;
   max-height: calc(85vh - 61px);
-  overflow: hidden;
   padding: 20px;
 }
 
