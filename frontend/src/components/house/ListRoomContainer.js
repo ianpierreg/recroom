@@ -123,7 +123,9 @@ export default function ListRoomContainer({ endpoint, token }) {
           return room;
         });
 
-        roomsBound = roomsBound.sort((a, b) => b.value - a.value)
+        roomsBound = roomsBound.sort((a, b) => b.value - a.value).map((r, index) => ({ ...r, position: index+1}))
+
+        console.log('aqui', roomsBound)
        
         setDataBound({ ...data, rooms: roomsBound });
       });

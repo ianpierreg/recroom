@@ -64,7 +64,7 @@ export default function RoomValuation({
 
   useEffect(() => {
     const { future_tenant_interests, tenants_interests, csByTypeSum } = room;
-    if(!csByTypeSum) return
+    if (!csByTypeSum) return;
 
     //it will get the occurrences of a interest in the future tenant and everyone in the house
     const interestRecurrence = {};
@@ -171,6 +171,57 @@ export default function RoomValuation({
     4: "quatro",
     5: "cinco",
   };
+  const valuationText = (key, item) => {
+    return (
+      <div key={key}>
+        <p>
+          O seu score de afinidade considerando apenas o tipo de interesse{" "}
+          <b>"{key}"</b> para essa residência (que contém{" "}
+          <b>{amountInWords[room.tenants_interests.length]}</b>{" "}
+          {room.tenants_interests.length === 1 ? "morador" : "moradores"}) é{" "}
+          <b>{(item.value * 100).toFixed()}%</b> e dentro desse tipo de
+          interesse:
+          <Tooltip
+            tooltipClassName="infotip-my-choices"
+            content={
+              <div>
+                Abaixo está a lista das suas escolhas para o tipo de interesse{" "}
+                {<b>"{key}"</b>} (importância de{" "}
+                {<b>{room.future_tenant_interests[key].importance}</b>}
+                ):{" "}
+                <ul>
+                  {room.future_tenant_interests[key].interests.map((d) => (
+                    <li key={d}>"{d}"</li>
+                  ))}
+                </ul>
+              </div>
+            }
+          >
+            <button className="infotip-button">i</button>
+          </Tooltip>
+        </p>
+        <ul>
+          {Object.keys(item.interests)
+            .sort(function (a, b) {
+              return item.interests[b] - item.interests[a];
+            })
+            .map((key2) =>
+              item.interests[key2] == 1 ? (
+                <li>
+                  Você e mais <b>um</b> morador da residência selecionaram{" "}
+                  <b>"{key2}"</b>;
+                </li>
+              ) : (
+                <li>
+                  Você e mais <b>{amountInWords[item.interests[key2]]}</b>{" "}
+                  moradores da residência selecionaram <b>"{key2}"</b>;
+                </li>
+              )
+            )}
+        </ul>
+      </div>
+    );
+  };
 
   return (
     <div className={opened ? "modal is-active" : "modal"}>
@@ -256,71 +307,34 @@ export default function RoomValuation({
             <div className="second-column">
               <div className="house-info">
                 {scoreByType &&
-                  Object.entries(scoreByType).map(([key, item]) => {
-                    return (
-                      <div key={key}>
-                        <p>
-                          O seu score de afinidade considerando apenas o tipo de
-                          interesse <b>"{key}"</b> para essa residência (que
-                          contém{" "}
-                          <b>{amountInWords[room.tenants_interests.length]}</b>{" "}
-                          {room.tenants_interests.length === 1
-                            ? "morador"
-                            : "moradores"}
-                          ) é <b>{(item.value * 100).toFixed(2)}%</b> e dentro desse tipo de
-                          interesse:
-                          <Tooltip
-                            tooltipClassName="infotip-my-choices"
-                            content={
-                              <div>
-                                Abaixo está a lista das suas escolhas para o
-                                tipo de interesse {<b>"{key}"</b>} (importância
-                                de{" "}
-                                {
-                                  <b>
-                                    {
-                                      room.future_tenant_interests[key]
-                                        .importance
-                                    }
-                                  </b>
-                                }
-                                ):{" "}
-                                <ul>
-                                  {room.future_tenant_interests[
-                                    key
-                                  ].interests.map((d) => (
-                                    <li key={d}>"{d}"</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            }
-                          >
-                            <button className="infotip-button">i</button>
-                          </Tooltip>
-                        </p>
-                        <ul>
-                          {Object.keys(item.interests)
-                            .sort(function (a, b) {
-                              return item.interests[b] - item.interests[a];
-                            })
-                            .map((key2) =>
-                              item.interests[key2] == 1 ? (
-                                <li>
-                                  Você e mais <b>um</b> morador da residência
-                                  selecionaram <b>"{key2}"</b>;
-                                </li>
-                              ) : (
-                                <li>
-                                  Você e mais{" "}
-                                  <b>{amountInWords[item.interests[key2]]}</b>{" "}
-                                  moradores da residência selecionaram{" "}
-                                  <b>"{key2}"</b>;
-                                </li>
-                              )
-                            )}
-                        </ul>
-                      </div>
-                    );
+                  Object.entries(scoreByType).map(([key, item], index) => {
+                    console.log({ key, item, index, position: room.position })
+                    if (room.position === 1 && index < 3)
+                      return valuationText(key, item);
+                    if (
+                      [2, 3].includes(room.position) &&
+                      index > 0 &&
+                      index < 4
+                    )
+                      return valuationText(key, item);
+                    if (room.position === 4 && index > 1 && index < 5)
+                      return valuationText(key, item);
+                    if (room.position === 5 && index > 2 && index < 6)
+                      return valuationText(key, item);
+                    if (
+                      [6, 7].includes(room.position) &&
+                      index > 3 &&
+                      index < 7
+                    )
+                      return valuationText(key, item);
+                    if (room.position === 8 && index > 4 && index < 8)
+                      return valuationText(key, item);
+
+                    if (room.position === 9 && index > 5 && index < 9)
+                      return valuationText(key, item);
+
+                    if (room.position === 10 && index > 6 && index < 10)
+                      return valuationText(key, item);
                   })}
                 <button
                   className="go-to-valuation"
