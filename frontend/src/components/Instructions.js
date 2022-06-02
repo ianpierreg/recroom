@@ -63,7 +63,7 @@ const Instructions = () => {
             Clique no botão “Responder perguntas”, no canto superior direito e
             os grupos de interesses serão apresentados com suas respectivas
             opções de interesses para seleção, de forma aleatória e sucessiva,
-            até que as perguntas acabem. É possível selecionar mais de um
+            até que as perguntas acabem. É preciso selecionar pelo menos um interesse, porém é possível selecionar mais de um
             interesse para cada grupo de interesses. É importante que todas
             perguntas sejam respondidas.
             <br />

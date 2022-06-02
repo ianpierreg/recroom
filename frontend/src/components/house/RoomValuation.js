@@ -30,7 +30,8 @@ export default function RoomValuation({
   const ref2 = useRef();
 
   useEffect(() => {
-    setHeaderHeight(`calc(85vh - ${ref.current.offsetHeight}px)`);
+    const baseHeight = window.innerWidth < 780 ? '100vh' : '85vh'
+    setHeaderHeight(`calc(${baseHeight} - ${ref.current.offsetHeight}px)`);
     if (opened) document.documentElement.style.overflow = "hidden";
     else document.documentElement.style.overflow = "unset";
   }, [ref, opened]);
@@ -207,12 +208,12 @@ export default function RoomValuation({
             })
             .map((key2) =>
               item.interests[key2] == 1 ? (
-                <li>
+                <li key={key2}>
                   Você e mais <b>um</b> morador da residência selecionaram{" "}
                   <b>"{key2}"</b>;
                 </li>
               ) : (
-                <li>
+                <li key={key2}>
                   Você e mais <b>{amountInWords[item.interests[key2]]}</b>{" "}
                   moradores da residência selecionaram <b>"{key2}"</b>;
                 </li>

@@ -2926,3 +2926,8 @@ p.instruction-p a, .instruction-list a {
 .go-to-app .button.is-success {
   color: #000 !important;
 }
+
+
+.button {
+  cursor: pointer;
+}

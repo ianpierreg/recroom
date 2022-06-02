@@ -152,7 +152,7 @@ export default function InterestsContainer({ endpoint, show, close }) {
           </div>
           <button className="delete" aria-label="close" onClick={closeModal} />
         </header>
-        <section className="modal-card-body">
+        <section className="modal-card-body" style={{maxHeight: 'calc(100vh - 61px)'}}>
           <div className="columns is-centered">
             <div className="column is-10">
               {loading ? (<h3>Carregando interesses ...</h3>) : (

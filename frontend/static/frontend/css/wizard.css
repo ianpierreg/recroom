@@ -5817,7 +5817,7 @@ a.dropdown-item.is-active {
           flex-grow: 1;
   -ms-flex-negative: 1;
       flex-shrink: 1;
-  max-height: calc(85vh - 61px);
+  /* height: calc(85vh - 61px); */
   padding: 20px;
 }
 
