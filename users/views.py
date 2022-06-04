@@ -73,20 +73,19 @@ def get_save_interests(request):
 @csrf_exempt
 @api_view(['POST'])
 def create_user(request):
-  setup_experiment()
-    # # ipdb.set_trace()
-    # user = CreateUserSerializer(data=request.data)
-    # if user.is_valid():
-    #     profile_group = Group.objects.get(
-    #         name=user.validated_data['profile']['group'])
-    #     user_saved = user.save()
-    #     profile_group.user_set.add(user_saved)
-    #     user_auth = authenticate(
-    #         username=user.validated_data['email'], password=user.validated_data['password'])
-    #     token, _ = Token.objects.get_or_create(user=user_auth)
-    #     return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
-    # else:
-    #     return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
+    # ipdb.set_trace()
+    user = CreateUserSerializer(data=request.data)
+    if user.is_valid():
+        profile_group = Group.objects.get(
+            name=user.validated_data['profile']['group'])
+        user_saved = user.save()
+        profile_group.user_set.add(user_saved)
+        user_auth = authenticate(
+            username=user.validated_data['email'], password=user.validated_data['password'])
+        token, _ = Token.objects.get_or_create(user=user_auth)
+        return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
