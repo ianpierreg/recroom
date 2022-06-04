@@ -88,10 +88,18 @@ export default function TopMenu({ token, setToken }) {
     if(!token) {
       return (
         <div className="inherit-div">
-          <span className="level-item" onClick={showRegisterModal}><a>Cadastrar</a></span>
-          <span className="level-item" onClick={showLoginModal}><a className="button is-success">Entrar</a></span>
+          <span
+            id="register-here"
+            className="level-item"
+            onClick={showRegisterModal}
+          >
+            <a>Cadastrar</a>
+          </span>
+          <span className="level-item" onClick={showLoginModal}>
+            <a className="button is-success">Entrar</a>
+          </span>
         </div>
-      )
+      );
     } else {
       return (
         <React.Fragment>

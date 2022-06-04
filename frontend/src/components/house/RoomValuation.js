@@ -168,7 +168,7 @@ export default function RoomValuation({
   const amountInWords = {
     1: "um",
     2: "dois",
-    3: "trës",
+    3: "três",
     4: "quatro",
     5: "cinco",
   };

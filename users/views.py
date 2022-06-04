@@ -2,7 +2,7 @@
 import random
 import math
 from django.contrib.auth.models import User
-
+from django.db import connection
 from django.contrib.auth.models import Group
 from rest_framework.authtoken.models import Token
 
@@ -22,9 +22,6 @@ from users.serializers import CreateUserSerializer, ValuationSerializer
 from house.services import CosineCalculator
 
 import ipdb
-
-
-#
 
 
 @csrf_exempt
@@ -50,11 +47,25 @@ def get_save_interests(request):
     interests_buff = profile.interests.all().values_list("interest_type_id", flat=True)
     types_available = InterestType.objects.exclude(id__in=interests_buff)
 
+    cursor = connection.cursor()
+
+    cursor.execute(
+        'SELECT COUNT(DISTINCT(iit.id)) FROM users_profileinterests up INNER JOIN interest_interest ii ON up.interest_id = ii.id INNER JOIN interest_interesttype iit ON ii.interest_type_id = iit.id WHERE profile_id = %s', [profile.id])
+
+    row = cursor.fetchone()
+    # ipdb.set_trace()
     if types_available:
         interest_type = random.choice(types_available)
         interests = Interest.objects.filter(interest_type=interest_type)
         serializers = InterestSerializer(interests, many=True)
-        return Response({"type": interest_type.name, "description": interest_type.description, "interests": serializers.data}, status=status.HTTP_200_OK)
+        return Response({
+            "type": interest_type.name,
+            "description": interest_type.description,
+            "interests": serializers.data,
+            "answered": profile.answered,
+            "type_answered": row[0],
+            "total_types": InterestType.objects.all().count()
+        }, status=status.HTTP_200_OK)
     else:
         return Response({"status": "Ok", "msg": "As perguntas terminaram!"}, status=status.HTTP_200_OK)
 
@@ -62,20 +73,20 @@ def get_save_interests(request):
 @csrf_exempt
 @api_view(['POST'])
 def create_user(request):
-
-    # ipdb.set_trace()
-    user = CreateUserSerializer(data=request.data)
-    if user.is_valid():
-        profile_group = Group.objects.get(
-            name=user.validated_data['profile']['group'])
-        user_saved = user.save()
-        profile_group.user_set.add(user_saved)
-        user_auth = authenticate(
-            username=user.validated_data['email'], password=user.validated_data['password'])
-        token, _ = Token.objects.get_or_create(user=user_auth)
-        return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
-    else:
-        return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
+  setup_experiment()
+    # # ipdb.set_trace()
+    # user = CreateUserSerializer(data=request.data)
+    # if user.is_valid():
+    #     profile_group = Group.objects.get(
+    #         name=user.validated_data['profile']['group'])
+    #     user_saved = user.save()
+    #     profile_group.user_set.add(user_saved)
+    #     user_auth = authenticate(
+    #         username=user.validated_data['email'], password=user.validated_data['password'])
+    #     token, _ = Token.objects.get_or_create(user=user_auth)
+    #     return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
+    # else:
+    #     return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -169,48 +180,50 @@ def assign_random_interests_to_users(user):
             interest_type=itype).order_by('?')[:sample_size]
 
         if itype.id == 4:
-          # ipdb.set_trace()
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[25, 26, 27], [30, 31, 32], [33, 34, 35]]))
-          interests = random.sample(list(interests), 2)
+            # ipdb.set_trace()
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[25, 26, 27], [30, 31, 32], [33, 34, 35]]))
+            interests = random.sample(list(interests), 2)
 
         if itype.id == 17:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[53, 156], [52, 155]]))
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[53, 156], [52, 155]]))
 
         if itype.id == 16:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[49, 50], [51, 54]]))
-          interests = random.sample(list(interests), random.choice(range(1, 3)))
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[49, 50], [51, 54]]))
+            interests = random.sample(
+                list(interests), random.choice(range(1, 3)))
 
         if itype.id == 14:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[43, 44], [42, 158]]))
-          interests = random.sample(list(interests), random.choice(range(1, 3)))
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[43, 44], [42, 158]]))
+            interests = random.sample(
+                list(interests), random.choice(range(1, 3)))
 
         if itype.id == 20:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[76, 77, 79], [74, 75]]))
-          interests = random.sample(list(interests), 2)
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[76, 77, 79], [74, 75]]))
+            interests = random.sample(list(interests), 2)
 
         if itype.id == 22:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[88, 91, 89], [97, 95, 93, 98]]))
-          interests = random.sample(list(interests), len(interests)-1)
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[88, 91, 89], [97, 95, 93, 98]]))
+            interests = random.sample(list(interests), len(interests)-1)
 
         if itype.id == 18:
             interests = Interest.objects.filter(pk__in=random.choice(
-              [[62, 63], [56, 59, 55]]))
+                [[62, 63], [56, 59, 55]]))
             interests = random.sample(list(interests), 2)
 
         if itype.id == 15:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[46, 48], [47, 159]]))
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[46, 48], [47, 159]]))
 
         if itype.id == 19:
-          interests = Interest.objects.filter(pk__in=random.choice(
-              [[65, 66, 67], [69, 70]]))
-          interests = random.sample(list(interests), 2)
+            interests = Interest.objects.filter(pk__in=random.choice(
+                [[65, 66, 67], [69, 70]]))
+            interests = random.sample(list(interests), 2)
 
         for interest in interests:
             user.profile.interests.add(interest)
@@ -237,7 +250,7 @@ def assign_random_interests_to_users(user):
 # @api_view(['POST'])
 
 
-def setup_experiment(request):
+def setup_experiment():
     # create 20 landlords
 
     createLandlorsAndHouses()
@@ -245,11 +258,11 @@ def setup_experiment(request):
 
 
 def createLandlorsAndHouses():
-    for i in range(20):
+    for i in range(6):
         user_data = {
-            'email': 'virtual_landlord'+str(i)+'@gmail.com',
-            'first_name': 'Virtual L'+str(i),
-            'last_name': 'Landlord '+str(i),
+            'email': 'virtual_landlordnew'+str(i)+'@gmail.com',
+            'first_name': 'Virtual L New'+str(i),
+            'last_name': 'Landlord New'+str(i),
             'password': '281094',
             'profile': {'birthdate': '1994-01-01', 'group': 'landlord'}
         }
@@ -270,13 +283,14 @@ def createLandlorsAndHouses():
             address.save()
 
             house = House(
-                rooms=2,
+                rooms=5,
                 people=1,
                 bathrooms=3,
                 size=200,
                 landlord=user_saved,
                 address_id=address.id
             )
+
             house.save()
 
             room = Room(
@@ -287,16 +301,40 @@ def createLandlorsAndHouses():
             )
             room.save()
 
+            room1 = Room(
+                description='Quarto virtual tenant',
+                size=10,
+                house=house,
+                price=600
+            )
+            room1.save()
+
+            room2 = Room(
+                description='Quarto virtual tenant',
+                size=10,
+                house=house,
+                price=600
+            )
+            room2.save()
+
+            room3 = Room(
+                description='Quarto virtual tenant',
+                size=10,
+                house=house,
+                price=600
+            )
+            room3.save()
+
             profile_group.user_set.add(user_saved)
-            assign_random_interests_to_users(user_saved)
+            # assign_random_interests_to_users(user_saved)
 
 
 def createTenantsAndRooms():
-    for i in range(55):
+    for i in range(18):
         user_data = {
-            'email': 'virtual_tenant'+str(i)+'@gmail.com',
-            'first_name': 'Virtual T'+str(i),
-            'last_name': 'Tenant '+str(i),
+            'email': 'virtual_tenantnew'+str(i)+'@gmail.com',
+            'first_name': 'Virtual T New'+str(i),
+            'last_name': 'Tenant New'+str(i),
             'password': '281094',
             'profile': {'birthdate': '1994-01-01', 'group': 'tenant'}
         }
@@ -308,30 +346,30 @@ def createTenantsAndRooms():
                 name=user.validated_data['profile']['group'])
             user_saved = user.save()
             profile_group.user_set.add(user_saved)
-            assign_random_interests_to_users(user_saved)
-            houses = House.objects.all()
-            cosine = CosineCalculator()
-            # ipdb.set_trace()
-            houses = cosine.calculate_similarity_all_houses(
-                houses, user_saved.profile, user_saved.profile)
+            # assign_random_interests_to_users(user_saved)
+            # houses = House.objects.all()
+            # cosine = CosineCalculator()
+            # # ipdb.set_trace()
+            # houses = cosine.calculate_similarity_all_houses(
+            #     houses, user_saved.profile, user_saved.profile)
 
-            chosen_house = houses[0]
-            exclude_len = len(Room.objects.filter(house=chosen_house))
+            # chosen_house = houses[0]
+            # exclude_len = len(Room.objects.filter(house=chosen_house))
 
-            for house in houses:
-                if len(Room.objects.filter(house=house)) < 4:
-                    chosen_house = house
-                    break
+            # for house in houses:
+            #     if len(Room.objects.filter(house=house)) < 4:
+            #         chosen_house = house
+            #         break
 
-            print(chosen_house.value)
-            room = Room(
-                tenant=user_saved,
-                description='Quarto virtual tenant',
-                size=10,
-                house=chosen_house,
-                price=600
-            )
-            room.save()
+            # print(chosen_house.value)
+            # room = Room(
+            #     tenant=user_saved,
+            #     description='Quarto virtual tenant',
+            #     size=10,
+            #     house=chosen_house,
+            #     price=600
+            # )
+            # room.save()
             # rankear
             #   se a primeira opcao tem mais de 2 pessoas
             #   tentta a segunda

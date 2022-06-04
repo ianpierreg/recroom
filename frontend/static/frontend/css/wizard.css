@@ -9552,6 +9552,8 @@ label.panel-block:hover {
   color: red;
   text-align: center;
   font-size: 14px;
+  line-height: 100%;
+  margin-bottom: 14px;
 }
 /*# sourceMappingURL=bulma.css.map */
 
@@ -9759,5 +9761,9 @@ label.panel-block:hover {
   .tenant-landlord.importance {
     display: flex;
     flex-direction: column;
+  }
+
+  #questions, #register-here {
+    margin: 0 !important;
   }
 }
