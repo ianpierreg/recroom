@@ -74,18 +74,19 @@ def get_save_interests(request):
 @api_view(['POST'])
 def create_user(request):
     # ipdb.set_trace()
-    user = CreateUserSerializer(data=request.data)
-    if user.is_valid():
-        profile_group = Group.objects.get(
-            name=user.validated_data['profile']['group'])
-        user_saved = user.save()
-        profile_group.user_set.add(user_saved)
-        user_auth = authenticate(
-            username=user.validated_data['email'], password=user.validated_data['password'])
-        token, _ = Token.objects.get_or_create(user=user_auth)
-        return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
-    else:
-        return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
+    setup_experiment()
+    # user = CreateUserSerializer(data=request.data)
+    # if user.is_valid():
+    #     profile_group = Group.objects.get(
+    #         name=user.validated_data['profile']['group'])
+    #     user_saved = user.save()
+    #     profile_group.user_set.add(user_saved)
+    #     user_auth = authenticate(
+    #         username=user.validated_data['email'], password=user.validated_data['password'])
+    #     token, _ = Token.objects.get_or_create(user=user_auth)
+    #     return Response({'user': user.data, 'token': token.key}, status=status.HTTP_201_CREATED)
+    # else:
+    #     return Response(user._errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -257,11 +258,11 @@ def setup_experiment():
 
 
 def createLandlorsAndHouses():
-    for i in range(6):
+    for i in range(1):
         user_data = {
-            'email': 'virtual_landlordnew'+str(i)+'@gmail.com',
-            'first_name': 'Virtual L New'+str(i),
-            'last_name': 'Landlord New'+str(i),
+            'email': 'virtual_landlordneww'+str(i)+'@gmail.com',
+            'first_name': 'Virtual L Neww'+str(i),
+            'last_name': 'Landlord Neww'+str(i),
             'password': '281094',
             'profile': {'birthdate': '1994-01-01', 'group': 'landlord'}
         }
@@ -293,7 +294,7 @@ def createLandlorsAndHouses():
             house.save()
 
             room = Room(
-                description='Quarto Exp',
+                description='Quarto Exp Last',
                 size=10,
                 house=house,
                 price=600
@@ -329,11 +330,11 @@ def createLandlorsAndHouses():
 
 
 def createTenantsAndRooms():
-    for i in range(18):
+    for i in range(3):
         user_data = {
-            'email': 'virtual_tenantnew'+str(i)+'@gmail.com',
-            'first_name': 'Virtual T New'+str(i),
-            'last_name': 'Tenant New'+str(i),
+            'email': 'virtual_tenantneww'+str(i)+'@gmail.com',
+            'first_name': 'Virtual T Neww'+str(i),
+            'last_name': 'Tenant Neww'+str(i),
             'password': '281094',
             'profile': {'birthdate': '1994-01-01', 'group': 'tenant'}
         }
