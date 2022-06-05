@@ -310,7 +310,7 @@ export default function RoomValuation({
                 {scoreByType &&
                   Object.entries(scoreByType).map(([key, item], index) => {
                     console.log({ key, item, index, position: room.position })
-                    if ([1, 10].includes(room.position) && index < 3)
+                    if (room.position === 1 && index < 3)
                       return valuationText(key, item);
                     if (
                       [2, 3].includes(room.position) &&
@@ -334,7 +334,15 @@ export default function RoomValuation({
                     if (room.position === 9 && index > 5 && index < 9)
                       return valuationText(key, item);
 
-                    if (room.position === 10 && index > 6 && index < 10)
+                    if (
+                      room.position === 10 &&
+                      [
+                        "Meio Ambiente",
+                        "Política Econômica",
+                        "Questões Militares",
+                        "Ética Social"
+                       ].includes(key)
+                    )
                       return valuationText(key, item);
                   })}
                 <button
