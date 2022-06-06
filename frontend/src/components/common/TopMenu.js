@@ -3,9 +3,11 @@ import { render } from "react-dom"
 import FormRegister from "../user/FormRegister";
 import FormLogin from "../user/FormLogin";
 import FormHouse from "../house/FormHouse"
+import LoadingCover from "../common/LoadingCover";
 // import useLocalStorage from "use-local-storage"
 import InterestsContainer from "../user/InterestsContainer";
 import useWindowSize from "../home/WindowSize";
+
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Burger from 'react-css-burger';
 
@@ -14,6 +16,7 @@ export default function TopMenu({ token, setToken }) {
   const [showLogin, setShowLogin] = useState(false)
   const [showQuestions, setShowQuestions] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const size = useWindowSize()
 
   const showRegisterModal = () => {
@@ -75,12 +78,15 @@ export default function TopMenu({ token, setToken }) {
         'Authorization': localStorage.getItem("token")
       }
     };
+    setLoading(true)
     fetch("/logout/", conf).then(response => {
         if(response.status !== 200) {
           return null
         }
         setToken(null)
         // location.reload()
+    }).finally(() => {
+      setLoading(false)
     })
   }
 
@@ -103,6 +109,7 @@ export default function TopMenu({ token, setToken }) {
     } else {
       return (
         <React.Fragment>
+          <LoadingCover loading={loading} />
           <span id="questions" className="level-item" onClick={showQuestionsModal}>
             <a>Completar Perfil</a>
           </span>

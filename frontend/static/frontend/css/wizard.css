@@ -9644,6 +9644,20 @@ label.panel-block:hover {
   align-items: center;
 }
 
+.loader-gif-backdrop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgb(255 255 255 / 56%);
+  z-index: 9999;
+}
+
 .loader-gif {
   display: flex;
   align-items: center;

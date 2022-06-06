@@ -340,7 +340,7 @@ export default function RoomValuation({
                         "Meio Ambiente",
                         "Política Econômica",
                         "Questões Militares",
-                        "Ética Social"
+                        "Ética Social",
                         "Religião"
                        ].includes(key)
                     )

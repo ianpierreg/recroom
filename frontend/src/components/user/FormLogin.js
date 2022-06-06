@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import '../../../static/frontend/css/common.css';
+import LoadingCover from '../common/LoadingCover';
 import CSRFToken from '../common/csrftoken';
 
 export default function FormLogin({ endpoint, close, showQuestions,setToken, show }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleEmailChange = e => setEmail(e.target.value)
 
@@ -35,6 +37,7 @@ export default function FormLogin({ endpoint, close, showQuestions,setToken, sho
     const csrftoken = getCookie('csrftoken');
     e.preventDefault()
     const user = { email, password }
+    
     const conf = {
       method: "post",
       body: JSON.stringify(user),
@@ -44,6 +47,7 @@ export default function FormLogin({ endpoint, close, showQuestions,setToken, sho
         'X-CSRFToken': csrftoken
       }
     };
+    setLoading(true)
     fetch(endpoint, conf).then(response => {
       if (response.status !== 200) {
         return null
@@ -58,6 +62,8 @@ export default function FormLogin({ endpoint, close, showQuestions,setToken, sho
       } else {
         setError('Email ou senha incorretos, verifique os dados e tente novamente.')
       }
+    }).finally(() => {
+      setLoading(false)
     })
   };
 
@@ -67,58 +73,64 @@ export default function FormLogin({ endpoint, close, showQuestions,setToken, sho
   }
 
   return (
-    <div className={show ? "modal is-active" : "modal"}>
-      <div className="modal-background" />
-      <div className="modal-card column is-mobile is-one-third">
-        <header className="modal-card-head">
-          <span className="modal-card-title is-size-5-mobile">Entrar</span>
-          <button className="delete" aria-label="close" onClick={close} />
-        </header>
-        <section className="modal-card-body">
-          <div className="columns is-centered">
-            <div className="column is-10">
-              <form onSubmit={handleSubmit}>
-                <div className="field">
-                  <div className="control">
-                    <input
-                      className="input is-medium"
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      onChange={handleEmailChange}
-                      value={email}
-                      required
-                    />
+    <React.Fragment>
+      <LoadingCover loading={loading} />
+      <div className={show ? "modal is-active" : "modal"}>
+        <div className="modal-background" />
+        <div className="modal-card column is-mobile is-one-third">
+          <header className="modal-card-head">
+            <span className="modal-card-title is-size-5-mobile">Entrar</span>
+            <button className="delete" aria-label="close" onClick={close} />
+          </header>
+          <section className="modal-card-body">
+            <div className="columns is-centered">
+              <div className="column is-10">
+                <form onSubmit={handleSubmit}>
+                  <div className="field">
+                    <div className="control">
+                      <input
+                        className="input is-medium"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={handleEmailChange}
+                        value={email}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="field">
-                  <div className="control">
-                    <input
-                      className="input is-medium"
-                      type="password"
-                      name="password"
-                      placeholder="Senha"
-                      onChange={handlePasswordChange}
-                      value={password}
-                      required
-                    />
+                  <div className="field">
+                    <div className="control">
+                      <input
+                        className="input is-medium"
+                        type="password"
+                        name="password"
+                        placeholder="Senha"
+                        onChange={handlePasswordChange}
+                        value={password}
+                        required
+                      />
+                    </div>
                   </div>
+                  <CSRFToken csrf={getCookie("csrftoken")} />
+                  <div className="control">
+                    <button
+                      type="submit"
+                      className="button is-primary is-fullwidth is-medium"
+                    >
+                      Entrar
+                    </button>
+                  </div>
+                </form>
+                <div className="soft-line-wrapper">
+                  <div className="soft-line" />
+                  <div className="error">{error}</div>
                 </div>
-                <CSRFToken csrf={getCookie('csrftoken')} />
-                <div className="control">
-                  <button type="submit" className="button is-primary is-fullwidth is-medium">
-                    Entrar
-                  </button>
-                </div>
-              </form>
-              <div className="soft-line-wrapper">
-                <div className="soft-line" />
-                 <div className="error">{error}</div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
-    </div>
-  )
+    </React.Fragment>
+  );
 }

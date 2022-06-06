@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import '../../../static/frontend/css/common.css';
 import CSRFToken from '../common/csrftoken';
+import LoadingCover from '../common/LoadingCover';
 
 class FormRegister extends Component {
   static propTypes = {
@@ -21,6 +22,7 @@ class FormRegister extends Component {
     birthdate:"",
     errors: {},
     error: "",
+    loading: false,
     group: "tenant" //this can be either 'tenant' or 'landlord'
   };
 
@@ -216,6 +218,7 @@ class FormRegister extends Component {
         'Authorization': localStorage.getItem("token")
       }
     };
+    this.setState({ loading: true })
     fetch(this.props.endpoint, conf).then(response => {
       const _this = this;
       if (response.ok) {
@@ -234,6 +237,8 @@ class FormRegister extends Component {
       this.props.setToken("Token "+data.token)
       this.props.showQuestions()
       // document.getElementById('questions').click();
+    }).finally(() => {
+      this.setState({ loading: false })
     })
   };
 
@@ -241,7 +246,9 @@ class FormRegister extends Component {
   render() {
     const { email, first_name, last_name, password, password2, birthdate } = this.state;
     return (
-      <div className={this.props.show ? "modal is-active" : "modal"}>
+      <React.Fragment>
+        <LoadingCover loading={this.state.loading} />
+              <div className={this.props.show ? "modal is-active" : "modal"}>
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
@@ -370,6 +377,7 @@ class FormRegister extends Component {
           </section>
         </div>
       </div>
+        </React.Fragment>
     );
   }
 }

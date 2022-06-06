@@ -169,7 +169,12 @@ export default function InterestsContainer({ endpoint, show, close }) {
           <div className="columns is-centered">
             <div className="column is-10">
               {loading ? (
-                <h3>Carregando interesses ...</h3>
+                <div className="loader-gif">
+                  <img
+                    src="/media/ux-laws-loading.gif"
+                    alt="icone de carregamento"
+                  />
+                </div>
               ) : (
                 <form onSubmit={handleSubmit}>
                   {renderOptions()}
@@ -270,7 +275,8 @@ export default function InterestsContainer({ endpoint, show, close }) {
                         </div>
                         {interestsBlank && (
                           <div className="error">
-                            Você precisa marcar pelo menos uma opção de interesse para continuar.
+                            Você precisa marcar pelo menos uma opção de
+                            interesse para continuar.
                           </div>
                         )}
                         {importanceBlank && (
