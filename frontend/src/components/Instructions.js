@@ -56,7 +56,7 @@ const Instructions = () => {
             </a>{" "}
             e clique no botão “Cadastrar”, no canto superior direito. Ao ser
             clicado, este botão leva o usuário para um formulário de cadastro
-            simples, basta preencher que além de fazer o cadastro, você será
+            simples, basta preencher o formulário e a conta será criada e você será
             automaticamente conectado à aplicação.
           </li>
           <li>

@@ -9,6 +9,25 @@
     <link rel="stylesheet" href="{% static 'frontend/assets/css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'frontend/css/wizard.css' %}">
   <link rel="preconnect" href="https://fonts.gstatic.com">
+  <script>
+    !function (e) {
+      if (!window.pintrk) {
+        window.pintrk = function () {
+          window.pintrk.queue.push(Array.prototype.slice.call(arguments))
+        }; var
+          n = window.pintrk; n.queue = [], n.version = "3.0"; var
+            t = document.createElement("script"); t.async = !0, t.src = e; var
+              r = document.getElementsByTagName("script")[0];
+        r.parentNode.insertBefore(t, r)
+      }
+    }("https://s.pinimg.com/ct/core.js");
+    pintrk('load', '2613725417222', {em: '<user_email_address>'});
+    pintrk('page');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none;" alt=""
+      src="https://ct.pinterest.com/v3/?event=init&tid=2613725417222&pd[em]=<hashed_email_address>&noscript=1" />
+  </noscript>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   {% block mycss %} {% endblock mycss %}
     <title>RecRoom - O quarto ideal para você!</title>
